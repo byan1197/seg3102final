@@ -8,6 +8,7 @@
     "firebase": "^5.5.8",
     "http": "0.0.0",
     "https": "^1.0.0",
+    "mongoose": "^5.3.13",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
     "react-scripts": "2.1.1"
