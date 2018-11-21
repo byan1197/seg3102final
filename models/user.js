@@ -10,7 +10,7 @@ const userSchema = mongoose.Schema({
       other: { type: String, required: false }
     },
     createdAt: { type: Date, require: true },
-    type: { type: StorageManager, required: true }, //one of: customer, owner, agent
+    type: { type: String, required: true }, //one of: customer, owner, agent
     password: {
       type: String,
       required: true,
