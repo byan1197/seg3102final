@@ -4,6 +4,8 @@ var bodyParser = require('body-parser');
 var env = process.env.NODE_ENV || "development";
 var config = require('./config/config.json')[env];
 const mongoose = require('mongoose');
+const User = require('./models/user');
+
 // ROUTES
 var authAPI = require('./api/auth');
 // var userAPI = require('./api/user');
@@ -13,6 +15,8 @@ var authAPI = require('./api/auth');
 mongoose.connect('mongodb://127.0.0.1:27017/seg', {
     useNewUrlParser : true
 })
+//Agent
+User.create();
 
 // END MONGO
 
