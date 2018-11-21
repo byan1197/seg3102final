@@ -16,7 +16,7 @@ mongoose.connect(config.mongo.url, {
     useNewUrlParser : true
 })
 //Agent
-User.create({
+mongoose.User.create({
   email: 'agent@opr.com',
   name: {
     first: 'Agent',
@@ -29,7 +29,7 @@ User.create({
 
 // END MONGO
 
-app = express();
+const app = express();
 
 // EXPRESS USE
 app.use(express.static('build'));
