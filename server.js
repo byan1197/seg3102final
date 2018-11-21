@@ -12,7 +12,7 @@ var authAPI = require('./api/auth');
 // var propertyAPI = require('./api/property');
 
 // MONGO
-mongoose.connect('mongodb://127.0.0.1:27017/seg', {
+mongoose.connect(config.mongo.url, {
     useNewUrlParser : true
 })
 //Agent
@@ -27,13 +27,15 @@ app.use(express.static('build'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use('/auth', authAPI)
+if(env === "production")
+    app.use(app.static("build"));
 
 // END OF EXPRESS USE
 
 /* ACTUAL SERVER STUFFS */
 http.createServer(app).listen(config.port ,function() {
     console.log('Our project is running! ', (new Date()).toString());
-    console.log('running on port is runing on port 3000');
+    console.log('running on port is runing on port ', config.port);
 }).on('error', function (err) {
     console.error(JSON.stringify(err));
 });
