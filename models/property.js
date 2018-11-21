@@ -7,7 +7,8 @@ const propertySchema = mongoose.Schema({
     address: { type: String, required: true },
     isAvailable: { type: boolean, required: true },
     createdAt: { type: Date, require: true },
-    images: [{type: String, required: true}]
+    images: [{ type: String, required: false }], //imgur ids
+    leasedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" }
 });
 
 module.exports = mongoose.model('Property', propertySchema);

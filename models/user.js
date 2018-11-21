@@ -6,10 +6,10 @@ const userSchema = mongoose.Schema({
     name: {
         first: { type: String, required: true },
         last: { type: String, required: true },
-        other: { type: String, required: true }
+        other: { type: String, required: false }
     },
     createdAt: { type: Date, require: true },
-    type: {type: StorageManager, required: true} //one of: customer, owner, agent
+    type: { type: StorageManager, required: true } //one of: customer, owner, agent
 });
 
 module.exports = mongoose.model('User', userSchema);

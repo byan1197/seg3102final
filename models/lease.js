@@ -8,7 +8,7 @@ const leaseSchema = mongoose.Schema({
     agent: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     owner: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     renter: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    createdAt: { type: Date, require: true }
+    createdAt: { type: Date, required: true }
 });
 
 module.exports = mongoose.model('Lease', leaseSchema);
