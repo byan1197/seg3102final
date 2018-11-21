@@ -19,6 +19,7 @@ const userSchema = mongoose.Schema({
       } }
 });
 
+//TypeError thrown, fix
 userSchema.prototype.validatePassword = function validatePassword(val) {
   return bcrypt.compare(val, this.password);
 };
