@@ -16,7 +16,16 @@ mongoose.connect(config.mongo.url, {
     useNewUrlParser : true
 })
 //Agent
-User.create();
+User.create({
+  email: 'agent@opr.com',
+  name: {
+    first: 'Agent',
+    last: 'HOD'
+  },
+  createdAt: new Date(),
+  type: 'agent', //one of: customer, owner, agent
+  password: 'seg3102project'
+}).then(user => console.log('user created: ', user.email));
 
 // END MONGO
 
