@@ -6,6 +6,7 @@ var config = require('./config/config.json')[env];
 
 const app = express();
 const userRoutes = require('./api/routes/users');
+const propertyRoutes = require('./api/routes/properties');
 const morgan = require('morgan');
 const mongoose = require('mongoose');
 
@@ -38,14 +39,15 @@ app.use((req, res, next) =>{
 app.use(express.static('build'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use('/auth', authAPI)
+
 if(env === "production")
     app.use(app.static("build"));
 
 // END OF EXPRESS USE
 
 
-app.use('/users', userRoutes);
+app.use('/user', userRoutes);
+app.use('/property',propertyRoutes)
 /* ACTUAL SERVER STUFFS */
 http.createServer(app).listen(config.port ,function() {
     console.log('Our project is running! ', (new Date()).toString());
