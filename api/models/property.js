@@ -9,7 +9,7 @@ const propertySchema = mongoose.Schema({
     images: [{ type: String, required: false }], //imgur ids
     leasedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
     numWashrooms: { type: Number, require: true },
-    numBedRooms: { type: Number, require: true },
+    numBedrooms: { type: Number, require: true },
     numOtherRooms: { type: Number, require: true },
     type: { type: String, require: true }, //one of : HOUSE, APPARTMENT
     rent: { type: Number, require: true },
