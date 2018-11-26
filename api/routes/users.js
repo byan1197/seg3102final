@@ -4,15 +4,18 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-router.post('/signup', checkAuth, (req, res, next) => {
+const checkAuth = require('../middleware/check_auth');
 
-    if (req.get('type') !== "AGENT")
-        return res.status(400).json({
-            message: "Unauthorized to create account"
-        })
+router.post('/signup', /*checkAuth,*/ (req, res, next) => {
+
+    // if (req.get('type') !== "AGENT")
+    //     return res.status(400).json({
+    //         message: "Unauthorized to create account"
+    //     })
 
     User.find({
-        email: req.body.email
+        email: req.body.email,
+        username: req.body.username
     })
         .exec()
         .then(user => {
@@ -33,7 +36,8 @@ router.post('/signup', checkAuth, (req, res, next) => {
                             email: req.body.email,
                             password: hash,
                             type: req.body.type,
-                            name: req.body.name
+                            name: req.body.name,
+                            username: req.body.username
                         });
                         user
                             .save()
@@ -123,7 +127,8 @@ router.post('/login', (req, res, next) => {
                         );
                         res.status(200).json({
                             message: 'Login Successful',
-                            token: token
+                            token: token,
+                            uid: user[0]._id
                         });
                     }
 
