@@ -13,7 +13,7 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 
 // MONGO
-mongoose.connect(, {
+mongoose.connect(config.mongo.url, {
     useNewUrlParser : true
 })
 //Agent

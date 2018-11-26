@@ -84,7 +84,18 @@ router.get('/properties', checkAuth, (req, res) => {
     })
 })
 
-
+router.get('locations', checkAuth, (req, res) => {
+    Property.find({}, 'address')
+    .exec((err, docs) => {
+        if (err) {
+            res.status(400).json({
+                error: err
+            })
+            return;
+        }
+        res.send(docs.data.map(x => x.address));
+    })
+})
 
 
 
