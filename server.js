@@ -3,34 +3,48 @@ var http = require('http')
 var bodyParser = require('body-parser');
 var env = process.env.NODE_ENV || "development";
 var config = require('./config/config.json')[env];
-const mongoose = require('mongoose');
-const User = require('./models/user');
+var globalConf = require('./config/config.json')['global'];
 
-// ROUTES
-var authAPI = require('./api/auth');
-// var userAPI = require('./api/user');
-// var propertyAPI = require('./api/property');
+const app = express();
+const userRoutes = require('./api/routes/users');
+const propertyRoutes = require('./api/routes/properties');
+const visitingList = require('./api/routes/visitingList');
+const morgan = require('morgan');
+const mongoose = require('mongoose');
 
 // MONGO
-mongoose.connect(config.mongo.url, {
+mongoose.connect(, {
     useNewUrlParser : true
 })
 //Agent
-User.create();
-
 // END MONGO
 
-app = express();
-
 // EXPRESS USE
+
+app.use(morgan('dev'));
+app.use((req, res, next) =>{
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    if(req.method == 'OPTIONS'){
+        res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
+        return res.status(200).json({});
+    }
+    next();
+});
 app.use(express.static('build'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use('/auth', authAPI)
+
 if(env === "production")
     app.use(app.static("build"));
 
 // END OF EXPRESS USE
+
+//ROUTES
+app.use('/u', userRoutes);
+app.use('/p',propertyRoutes)
+app.use('/vl', visitingList)
+// END OF ROUTES
 
 /* ACTUAL SERVER STUFFS */
 http.createServer(app).listen(config.port ,function() {
