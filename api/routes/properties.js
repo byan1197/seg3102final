@@ -5,7 +5,14 @@ const Property = require('../models/property');
 const User = require('../models/user');
 const mongoose = require('mongoose');
 
+//creating property
 router.post('/', checkAuth, (req, res, next) =>{
+
+    if (req.body.images < 5)
+        return res.status(400).json({
+            message: 'Not enough photos'
+        });
+
 
     const property = new Property({
         _id : new mongoose.Types.ObjectId(),
@@ -13,7 +20,8 @@ router.post('/', checkAuth, (req, res, next) =>{
         address : req.body.address,
         isAvailable: req.body.isAvailable,
         createdAt: new Date().toString(),
-        leasedTo: req.body.leasedTo
+        leasedTo: req.body.leasedTo,
+        images: req.body.images
     });
 
     property.save().then(result => {
@@ -69,9 +77,29 @@ router.get('/ownedby?:uid', checkAuth, (req, res) => {
 
 //VIEWING ALL PROPERTIES
 router.get('/properties', checkAuth, (req, res) => {
-    Property.find({
+    // ?l=:location&bed=:bed&bath=:bath&minrent=:minrent&maxrent=:maxrent&t:=t
 
-    })
+    var where = {};
+    var rentQuery = {}; 
+
+    console.log(req.query);
+
+    Object.keys(req.query)
+    .filter(q => !q.includes('Rent'))
+    .forEach(p => {
+        console.log('p', p)
+        if (req.query[p])
+            where[p] = req.query[p]
+    });
+
+    if (req.query.maxRent)
+        rentQuery.$gte = parseInt(req.query.maxRent)
+    if (req.query.minRent)
+        rentQuery.$lte = parseInt(req.query.minRent)
+    if (rentQuery)
+        where.rent = rentQuery
+
+    Property.find(where)
     .populate('owner')
     .exec((err, docs) => {
         if (err) {
@@ -84,7 +112,7 @@ router.get('/properties', checkAuth, (req, res) => {
     })
 })
 
-router.get('locations', checkAuth, (req, res) => {
+router.get('/locations', checkAuth, (req, res) => {
     Property.find({}, 'address')
     .exec((err, docs) => {
         if (err) {
@@ -93,7 +121,7 @@ router.get('locations', checkAuth, (req, res) => {
             })
             return;
         }
-        res.send(docs.data.map(x => x.address));
+        res.send(docs.data.map(x => x.location));
     })
 })
 

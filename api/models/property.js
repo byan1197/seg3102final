@@ -8,10 +8,13 @@ const propertySchema = mongoose.Schema({
     createdAt: { type: Date, require: true },
     images: [{ type: String, required: false }], //imgur ids
     leasedTo: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
-    yearBuilt: { type: Number, require: true },
     numWashrooms: { type: Number, require: true },
-    numRooms: { type: Number, require: true },
-    newlyRennovated: { type: Boolean, require: true },
+    numBedRooms: { type: Number, require: true },
+    numOtherRooms: { type: Number, require: true },
+    type: { type: String, require: true }, //one of : HOUSE, APPARTMENT
+    rent: { type: Number, require: true },
+    location: { type: String, required: true},
+    deleted: { type: Boolean, required: true}
 });
 
-module.exports = mongoose.model('Property',propertySchema);
+module.exports = mongoose.model('Property', propertySchema);

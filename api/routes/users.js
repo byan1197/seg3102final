@@ -4,60 +4,71 @@ const mongoose = require('mongoose');
 const User = require('../models/user');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-router.post('/signup', (req, res, next) => {
+const checkAuth = require('../middleware/check_auth');
 
-    User.find({email : req.body.email})
+router.post('/signup', /*checkAuth,*/ (req, res, next) => {
+
+    // if (req.get('type') !== "AGENT")
+    //     return res.status(400).json({
+    //         message: "Unauthorized to create account"
+    //     })
+
+    User.find({
+        email: req.body.email,
+        username: req.body.username
+    })
         .exec()
-        .then(user => { 
-            if (user.length > 0){
+        .then(user => {
+            if (user.length > 0) {
                 console.log(user);
                 return res.status(409).json({
-                    message : "email exists"
+                    message: "email exists"
                 });
-            } else{
+            } else {
                 const hash = bcrypt.hash(req.body.password, 10, (err, hash) => {
-                    if (err){
+                    if (err) {
                         return res.status(500).json({
-                            error : err
+                            error: err
                         });
-                    }else{
+                    } else {
                         const user = new User({
-                            _id : new mongoose.Types.ObjectId(),
+                            _id: new mongoose.Types.ObjectId(),
                             email: req.body.email,
-                            password : hash,
-                            type : req.body.type,
-                            name: req.body.name
+                            password: hash,
+                            type: req.body.type,
+                            name: req.body.name,
+                            username: req.body.username
                         });
                         user
                             .save()
                             .then(result => {
                                 console.log(result);
                                 res.status(201).json({
-                                    message : 'user created'
+                                    message: 'user created'
                                 });
                             })
-                            .catch(err =>{
+                            .catch(err => {
                                 console.log(err);
                                 res.status(500).json({
-                                    error : 'invalid email entered'
+                                    error: 'invalid email entered'
                                 })
                             })
-                }
-            });
-        }
-    });  
+                    }
+                });
+            }
+        });
 });
 
 router.get('/', (req, res, next) => {
     User.find()
         .select('_id email type name')
-        .then( docs =>{
+        .then(docs => {
             const response = {
-                length : docs.length,
-                users : docs.map(user => {
-                    return{
-                        _id : user._id,
-                        email : user.email,
+                length: docs.length,
+                users: docs.map(user => {
+                    return {
+                        _id: user._id,
+                        email: user.email,
                         name: user.name,
                         type: user.type,
                         name: user.name
@@ -66,64 +77,65 @@ router.get('/', (req, res, next) => {
             }
             res.status(200).json(response);
         })
-        .catch( err => {
+        .catch(err => {
             console.log(err);
             res.status(500).json({
-                error : err
+                error: err
             })
         })
 })
 
 router.delete('/:userId', (req, res, next) => {
-    User.deleteOne({_id : req.params.userId})
+    User.deleteOne({ _id: req.params.userId })
         .exec()
         .then(result => {
             res.status(200).json({
-                message : 'User successfully deleted',
-                userId : req.body.userId
+                message: 'User successfully deleted',
+                userId: req.body.userId
             });
         })
-        .catch( err => {
+        .catch(err => {
             res.status(500).json({
-                error : err
+                error: err
             })
         })
 });
 
-router.post('/login', (req, res, next) =>{
-    User.find({email : req.body.email})
+router.post('/login', (req, res, next) => {
+    User.find({ email: req.body.email })
         .exec()
-        .then( user => {
-            if(user.length < 1){
+        .then(user => {
+            if (user.length < 1) {
                 res.status(401).json({
-                    message : 'Auth failed'
+                    message: 'Auth failed'
                 });
-            }else{
-                bcrypt.compare(req.body.password, user[0].password, (err, result) =>{
-                    if(err || !result){
+            } else {
+                bcrypt.compare(req.body.password, user[0].password, (err, result) => {
+                    if (err || !result) {
                         res.status(401).json({
                             message: 'Auth failed'
                         });
-                    }else{
+                    } else {
                         const token = jwt.sign({
                             email: user[0].email,
                             userId: user[0]._id
                         },
-                        "secret", 
+                            "secret",
                             {
-                                expiresIn : "1h"
+                                expiresIn: "1h"
                             }
                         );
                         res.status(200).json({
                             message: 'Login Successful',
-                            token : token
+                            token: token,
+                            uid: user[0]._id
                         });
                     }
-                    
+
                 });
             }
         })
-        .catch(err =>{
+        .catch(err => {
             res.status(500).json(err);
         })
 })
