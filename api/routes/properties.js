@@ -68,7 +68,10 @@ router.get('/ownedby?:uid', checkAuth, (req, res) => {
 })
 
 //VIEWING ALL PROPERTIES
-router.get('/properties', checkAuth, (req, res) => {
+router.get('/properties?l=:location&bed=:bed&bath=:bath&minrent=:minrent&maxrent=:maxrent&t:=t', checkAuth, (req, res) => {
+
+    console.log('req.params', req.params);
+
     Property.find({
 
     })

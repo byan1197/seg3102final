@@ -11,7 +11,7 @@ const propertySchema = mongoose.Schema({
     yearBuilt: { type: Number, require: true },
     numWashrooms: { type: Number, require: true },
     numRooms: { type: Number, require: true },
-    newlyRennovated: { type: Boolean, require: true },
+    rent: { type: Number, require: true }
 });
 
-module.exports = mongoose.model('Property',propertySchema);
+module.exports = mongoose.model('Property', propertySchema);
