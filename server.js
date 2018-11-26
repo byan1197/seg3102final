@@ -13,19 +13,17 @@ const morgan = require('morgan');
 const mongoose = require('mongoose');
 
 // MONGO
-mongoose.connect(config.mongo.url, {
-    useNewUrlParser : true
-})
+mongoose.connect(config.mongo.url, { useNewUrlParser: true })
 //Agent
 // END MONGO
 
 // EXPRESS USE
 
 app.use(morgan('dev'));
-app.use((req, res, next) =>{
+app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
-    if(req.method == 'OPTIONS'){
+    if (req.method == 'OPTIONS') {
         res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
         return res.status(200).json({});
     }
@@ -33,21 +31,21 @@ app.use((req, res, next) =>{
 });
 app.use(express.static('build'));
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}));
+app.use(bodyParser.urlencoded({ extended: false }));
 
-if(env === "production")
+if (env === "production")
     app.use(app.static("build"));
 
 // END OF EXPRESS USE
 
 //ROUTES
 app.use('/u', userRoutes);
-app.use('/p',propertyRoutes)
+app.use('/p', propertyRoutes)
 app.use('/vl', visitingList)
 // END OF ROUTES
 
 /* ACTUAL SERVER STUFFS */
-http.createServer(app).listen(config.port ,function() {
+http.createServer(app).listen(config.port, function () {
     console.log('Our project is running! ', (new Date()).toString());
     console.log('running on port is runing on port ', config.port);
 }).on('error', function (err) {
