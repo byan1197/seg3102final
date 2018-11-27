@@ -8,11 +8,16 @@ import Routes from './components/Routes';
 class App extends Component {
   render() {
     return (
+<<<<<<< HEAD
       <div>
         <NavBar/>
         <BrowserRouter>
           <Routes/>
         </BrowserRouter>
+=======
+      <div className="App">
+        <p>hello bbo</p>
+>>>>>>> master
       </div>
     );
   }
