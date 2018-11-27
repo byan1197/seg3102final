@@ -18,19 +18,16 @@ import Typography from '@material-ui/core/Typography'
 // import MailIcon from '@material-ui/icons/Mail';
 // import NotificationsIcon from '@material-ui/icons/Notifications';
 // import MoreIcon from '@material-ui/icons/MoreVert';
+import { BrowserRouter } from 'react-router-dom';
 import './App.css';
+import Routes from './components/Routes';
 
 class App extends Component {
   render() {
     return (
-      <div className="App">
-        <div className="App-header">
-          <Typography variant="h4" >OPR</Typography>
-        </div>
-        <div className="Main">
-          <Typography variant="h1">Hello</Typography>
-        </div>
-      </div>
+      <BrowserRouter>
+        <Routes></Routes>
+      </BrowserRouter>
     );
   }
 }
