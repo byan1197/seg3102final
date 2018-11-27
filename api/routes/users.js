@@ -59,6 +59,7 @@ router.post('/signup', /*checkAuth,*/ (req, res, next) => {
         });
 });
 
+//GET ALL USERS
 router.get('/', (req, res, next) => {
     User.find()
         .select('_id email type name')
@@ -83,6 +84,14 @@ router.get('/', (req, res, next) => {
                 error: err
             })
         })
+})
+
+router.get('/&uid=:uid', checkAuth, (req, res, next) => {
+    User.findById({_id: req.query.uid}).exec((err, u) => {
+        if(err)
+            return res.status(500).json({message: 'Could not find user'})
+        res.status(201).json(u)
+    })
 })
 
 router.delete('/:userId', (req, res, next) => {
