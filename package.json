@@ -14,11 +14,8 @@
     "mongoose": "^5.3.13",
     "react": "^16.6.3",
     "react-dom": "^16.6.3",
-<<<<<<< HEAD
     "react-router": "^4.3.1",
-=======
     "react-router-dom": "^4.3.1",
->>>>>>> d92b74d73cb3c62b2feea8bf6b124946646120dc
     "react-scripts": "2.1.1",
     "typeface-roboto": "0.0.54"
   },

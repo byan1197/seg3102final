@@ -87,7 +87,7 @@ class MenuAppBar extends React.Component {
                   <MenuItem onClick={this.handleClose}>My account</MenuItem>
                 </Menu>
               </div>
-            ): <button></button>}
+            ): <Button>Login</Button>}
           </Toolbar>
         </AppBar>
       </div>
