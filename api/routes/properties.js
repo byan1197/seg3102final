@@ -59,7 +59,7 @@ router.post('/', checkAuth, (req, res, next) => {
 });
 
 // GETTING ALL PROPERTIES FROM OWNER WITH :uid
-router.get('/ownedby?:uid', checkAuth, (req, res) => {
+router.get('/ownedby&uid=:uid', checkAuth, (req, res) => {
 
     if (!req.params.uid) {
         res.status(400).json({
@@ -89,7 +89,7 @@ router.get('/ownedby?:uid', checkAuth, (req, res) => {
 })
 
 //VIEWING ALL PROPERTIES
-router.get('/properties', checkAuth, (req, res) => {
+router.get('/', checkAuth, (req, res) => {
     // ?l=:location&bed=:bed&bath=:bath&minrent=:minrent&maxrent=:maxrent&t:=t
 
     var where = {
@@ -143,6 +143,27 @@ router.get('/locations', checkAuth, (req, res) => {
         })
 })
 
+router.patch('/del', checkAuth, (req, res) => {
 
+    const where = {
+        _id: req.body.pid
+    }
+
+    const set = {
+        deleted: true
+    }
+
+    Property.updateOne(where, { $set: set })
+        .exec((err, result) => {
+            if (err)
+                return res.status(500).json({
+                    error: err
+                })
+            return res.status(200).json({
+                message: "Successfully deleted property"
+            })
+        })
+
+})
 
 module.exports = router;
