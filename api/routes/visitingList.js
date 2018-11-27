@@ -68,9 +68,6 @@ router.post('/',  (req, res, next) =>{
                     customerId : userId,
                     list: [propertyId]
                 });
-
-
-
                 vList.save().then(result => {
 
                     res.send({
@@ -83,6 +80,14 @@ router.post('/',  (req, res, next) =>{
                 })
             }else{
                 const vl = docs[0];
+
+                var strList = vl.list.map(i => i.toString());
+
+                if (strList.includes(propertyId)){
+                    return res.status(400).json({
+                        message: "property already added to visiting list"
+                    });
+                }
                 vl.list.push(propertyId);
                 VisitingList.updateOne({customerId : userId}, {$set : vl})
                     .exec()
@@ -110,7 +115,19 @@ router.post('/',  (req, res, next) =>{
 
 });
 
-router.get('/get?:userid', checkAuth, (req, res, next) =>{
+router.get('/:userid', (req, res, next) =>{
+    VisitingList.find({customerId: req.params.userid})
+        .exec((err,docs) =>{
+            if(docs.length <= 0 || err){
+                return res.status(400).json({
+                    message: "visiting list does not exist",
+                    error: err
+                });
+            }
+
+            res.status(200).json(docs[0]);
+
+        })
 });
 
 
