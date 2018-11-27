@@ -14,7 +14,6 @@ const mongoose = require('mongoose');
 
 // MONGO
 mongoose.connect(config.mongo.url, { useNewUrlParser: true })
-//Agent
 // END MONGO
 
 // EXPRESS USE
