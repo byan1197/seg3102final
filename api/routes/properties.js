@@ -38,7 +38,6 @@ router.post('/', checkAuth, (req, res, next) => {
     });
 
     property.save().then(result => {
-        console.log(result);
         res.status(201).json({
             message: 'Created Property successfully',
             createdProperty: {
@@ -51,7 +50,6 @@ router.post('/', checkAuth, (req, res, next) => {
         })
     })
         .catch(err => {
-            console.log(err);
             res.status(500).json({
                 error: err
             });
@@ -90,20 +88,17 @@ router.get('/ownedby&uid=:uid', checkAuth, (req, res) => {
 
 //VIEWING ALL PROPERTIES
 router.get('/', checkAuth, (req, res) => {
-    // ?l=:location&bed=:bed&bath=:bath&minrent=:minrent&maxrent=:maxrent&t:=t
 
     var where = {
         deleted: false,
         isAvailable: true
     };
-    var rentQuery = {};
 
-    console.log('req.query', req.query);
+    var rentQuery = {};
 
     Object.keys(req.query)
         .filter(q => !q.includes('Rent'))
         .forEach(p => {
-            console.log('p', p)
             if (req.query[p])
                 where[p] = req.query[p]
         });
@@ -114,8 +109,6 @@ router.get('/', checkAuth, (req, res) => {
         rentQuery.$gte = parseInt(req.query.minRent)
     if (Object.keys(rentQuery).length > 0)
         where.rent = rentQuery
-
-    console.log('where', where)
 
     Property.find(where)
         .populate('owner')

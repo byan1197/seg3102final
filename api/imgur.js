@@ -19,6 +19,7 @@ const ImgurHelper = {
             }
         })
             .then(res => res.json())
+            //FIX ME
             .then(response => console.log('Success:', JSON.stringify(response)))
             .catch(error => console.error('Error:', error));
     },

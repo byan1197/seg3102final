@@ -1,20 +1,34 @@
 var config = require('../uiConfig.json')[process.env.NODE_ENV || "development"];
 
-const Fetch = {
+const Fetcher = {
 
     postLogin: function (data) {
+
+        console.log(data);
+
         return fetch(config.url + '/u/login', {
             method: "POST",
-            body: data,
+            body: JSON.stringify(data),
             headers: {
+                'Accept': 'application/json',
                 'Content-Type': 'application/json'
             }
         }).then(res => res.json())
             .then(res => {
-                if (res.uid)
-                    localStorage.setItem("uid", res.uid)
-                if (res.token)
-                    localStorage.setItem("token", res.token)
+                if (!(res.uid && res.token && res.type))
+                    throw new Error("Could not retrieve user data");
+
+                localStorage.setItem("uid", res.uid)
+                localStorage.setItem("token", res.token)
+                localStorage.setItem("type", res.type)
+
+                return {
+                    success: "Logged in"
+                };
+            })
+            .catch(e => {
+                localStorage.clear();
+                return { message: "Error: invalid credentials" }
             })
 
     },
@@ -27,11 +41,7 @@ const Fetch = {
             }
         }).then();
     },
-    addProperty: function(data) {
-
-        
-
-
+    addProperty: function (data) {
         return fetch(config.url + "/p", {
             method: "POST",
             body: data,
@@ -42,3 +52,5 @@ const Fetch = {
     }
 
 }
+
+export default Fetcher

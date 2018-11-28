@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
@@ -12,9 +12,11 @@ import LockIcon from '@material-ui/icons/LockOutlined';
 import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
-
+import Fetcher from '../helpers/fetcher';
+import { Redirect } from 'react-router-dom';
 const styles = theme => ({
   main: {
+    height: '100vh',
     width: 'auto',
     display: 'block', // Fix IE 11 issue.
     marginLeft: theme.spacing.unit * 3,
@@ -45,45 +47,85 @@ const styles = theme => ({
   },
 });
 
-function Login(props) {
-  const { classes } = props;
+class Login extends Component {
 
-  return (
-    <main className={classes.main}>
-      <CssBaseline />
-      <Paper className={classes.paper}>
-        <Avatar className={classes.avatar}>
-          <LockIcon />
-        </Avatar>
-        <Typography component="h1" variant="h5">
-          Login
-        </Typography>
-        <form className={classes.form}>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="email">Email Address</InputLabel>
-            <Input id="email" name="email" autoComplete="email" autoFocus />
-          </FormControl>
-          <FormControl margin="normal" required fullWidth>
-            <InputLabel htmlFor="password">Password</InputLabel>
-            <Input name="password" type="password" id="password" autoComplete="current-password" />
-          </FormControl>
-          <FormControlLabel
-            control={<Checkbox value="remember" color="primary" />}
-            label="Remember me"
-          />
-          <Button
-            type="submit"
-            fullWidth
-            variant="contained"
-            color="primary"
-            className={classes.submit}
-          >
-            LOGIN
-          </Button>
-        </form>
-      </Paper>
-    </main>
-  );
+  constructor(props) {
+    super(props);
+    this.state = {
+      errorMessage: null,
+      success: null
+    }
+  }
+
+
+
+  handleLogin = (e) => {
+
+    Fetcher.postLogin({
+      username: e.target.username.value,
+      password: e.target.password.value
+    }).then(res => {
+      this.setState({
+        errorMessage: res.message || null,
+        success: res.success || null
+      })
+      return (<Redirect to='/'></Redirect>)
+    })
+
+  }
+
+  render() {
+
+    const { classes } = this.props;
+    var error = this.state.errorMessage;
+    var successMsg = this.state.success;
+
+    console.log(successMsg)
+    console.log(error)
+
+    return (
+      <main className={classes.main}>
+        <CssBaseline />
+        <Paper className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Login
+          </Typography>
+          <Typography component="p" variant="b" style={error ? { color: 'red' } : { color: 'green' }}>
+            {
+              error ?
+                error :
+                successMsg
+            }
+          </Typography>
+
+          <form className={classes.form} onSubmit={e => { e.preventDefault(); this.handleLogin(e) }}>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="username">Username</InputLabel>
+              <Input id="username" name="username" autoFocus />
+            </FormControl>
+            <FormControl margin="normal" required fullWidth>
+              <InputLabel htmlFor="password">Password</InputLabel>
+              <Input name="password" type="password" id="password" autoComplete="current-password" />
+            </FormControl>
+            <Button
+              type="submit"
+              fullWidth
+              variant="contained"
+              color="primary"
+              className={classes.submit}
+            >
+              LOGIN
+            </Button>
+          </form>
+        </Paper>
+      </main>
+
+    )
+
+  }
 }
 
 Login.propTypes = {

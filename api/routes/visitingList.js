@@ -20,8 +20,6 @@ router.post('/',  (req, res, next) =>{
             if(!user){
                 reject('User not found');
             }  
-            //user = docs[0];
-            console.log(user)
             resolve(user);
         })
         .catch(err => {
@@ -39,7 +37,6 @@ router.post('/',  (req, res, next) =>{
                 reject('Property not found');
             }
             //property = prop[0];
-            console.log(prop);
             resolve(prop);
         })
         .catch(err => {
@@ -97,7 +94,6 @@ router.post('/',  (req, res, next) =>{
                         });
                     })
                     .catch(err => {
-                        console.log(err);
                         res.status(500).json({
                             error : err
                         });
