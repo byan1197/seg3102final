@@ -34,6 +34,7 @@ class MenuAppBar extends React.Component {
     super(props);
     this.state = {
       anchorEl: null,
+      toHome: false
     }
   }
 
@@ -49,12 +50,10 @@ class MenuAppBar extends React.Component {
     this.setState({ anchorEl: null });
   };
 
-  redirToHome= () => <Redirect to='/'></Redirect>
-
   logout = () => {
-    localStorage.clear();
     this.handleClose();
-    this.redirToHome();
+    localStorage.clear();
+    this.setState({toHome: true})
   }  
 
   render() {
@@ -62,6 +61,9 @@ class MenuAppBar extends React.Component {
     const { anchorEl } = this.state;
     const auth = localStorage.getItem('uid') && localStorage.getItem("token")
     const open = Boolean(anchorEl);
+
+    if (this.state.toHome)
+      return <Redirect to='/'></Redirect>
 
     return (
       <div className={classes.root}>

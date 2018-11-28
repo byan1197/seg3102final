@@ -36,7 +36,8 @@ router.post('/signup', /*checkAuth,*/ (req, res, next) => {
                             password: hash,
                             type: req.body.type,
                             name: req.body.name,
-                            username: req.body.username
+                            username: req.body.username,
+                            maxRent: req.body.maxRent
                         });
                         user
                             .save()
