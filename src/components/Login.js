@@ -118,12 +118,18 @@ class Login extends Component {
             <Button
               type="submit"
               fullWidth
+              margin='normal'
               variant="contained"
               color="primary"
               className={classes.submit}
             >
               LOGIN
             </Button>
+            <Button
+              fullWidth
+              margin='normal'
+              variant="contained"
+              color="secondary"> Setup an account with an agent</Button>
           </form>
         </Paper>
       </main>

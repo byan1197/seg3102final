@@ -51,8 +51,8 @@ class MenuAppBar extends React.Component {
   };
 
   logout = () => {
-    localStorage.clear();
     this.handleClose();
+    localStorage.clear();
     this.setState({toHome: true})
   }  
 
