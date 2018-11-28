@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const config = require('../../config/config.json')['global']
 
 //creating property
-router.post('/', checkAuth, (req, res, next) => {
+router.post('/', (req, res, next) => {
 
     if (req.body.images < 5)
         return res.status(400).json({
@@ -109,7 +109,6 @@ router.get('/', checkAuth, (req, res) => {
         rentQuery.$gte = parseInt(req.query.minRent)
     if (Object.keys(rentQuery).length > 0)
         where.rent = rentQuery
-
     Property.find(where)
         .populate('owner')
         .exec((err, docs) => {
@@ -136,10 +135,10 @@ router.get('/locations', checkAuth, (req, res) => {
         })
 })
 
-router.patch('/del', checkAuth, (req, res) => {
+router.patch('/del=:pid', checkAuth, (req, res) => {
 
     const where = {
-        _id: req.body.pid
+        _id: req.params.uid
     }
 
     const set = {
@@ -158,5 +157,27 @@ router.patch('/del', checkAuth, (req, res) => {
         })
 
 })
+
+router.patch('/:pid', (req, res, next) => {
+
+    const where = {
+        _id: req.params.pid
+    }
+
+    
+    Property.updateOne(where, { $set: req.body })
+        .exec((err, result) => {
+            if (err)
+                return res.status(500).json({
+                    error: err
+                })
+            return res.status(200).json({
+                message: "Successfully updated property"
+            })
+        })
+
+})
+
+
 
 module.exports = router;
