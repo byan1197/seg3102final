@@ -1,0 +1,13 @@
+import React from 'react';
+import { Route, Switch } from 'react-router-dom';
+import Login from './Login';
+import Home from '../views/Home';
+
+const RouteList = () => (
+  <Switch>
+    <Route path="/" component={ Home } />
+    <Route path="/login" component={ Login } />
+  </Switch>
+)
+
+export default RouteList;

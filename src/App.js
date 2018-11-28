@@ -3,11 +3,10 @@ import React, { Component } from 'react';
 import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import NavBar from './components/NavBar'
-import Routes from './components/Routes';
+import RouteList from './components/RouteList';
 import { timingSafeEqual } from 'crypto';
 
 class App extends Component {
-
   constructor() {
     super()
     this.state = {
@@ -16,16 +15,13 @@ class App extends Component {
   }
 
   render() {
-
-    let navBarProps = {
-    }
-
+    let navBarProps = {}
     return (
       <div>
         <BrowserRouter>
           <div>
             <NavBar {...navBarProps} />
-            <Routes />
+            <RouteList />
           </div>
         </BrowserRouter>
       </div>
