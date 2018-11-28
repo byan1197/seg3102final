@@ -7,7 +7,7 @@ const mongoose = require('mongoose');
 const config = require('../../config/config.json')['global']
 
 //creating property
-router.post('/', (req, res, next) => {
+router.post('/', checkAuth, (req, res, next) => {
 
     if (req.body.images < 5)
         return res.status(400).json({
@@ -158,7 +158,7 @@ router.patch('/del=:pid', checkAuth, (req, res) => {
 
 })
 
-router.patch('/:pid', (req, res, next) => {
+router.patch('/:pid', checkAuth, (req, res, next) => {
 
     const where = {
         _id: req.params.pid
