@@ -12,6 +12,8 @@ import Button from '@material-ui/core/Button';
 // import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
+import { NavLink, Redirect } from 'react-router-dom';
+import Fetcher from '../helpers/fetcher';
 
 const styles = {
   root: {
@@ -27,10 +29,13 @@ const styles = {
 };
 
 class MenuAppBar extends React.Component {
-  state = {
-    auth: true,
-    anchorEl: null,
-  };
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      anchorEl: null,
+    }
+  }
 
   // handleChange = event => {
   //   this.setState({ auth: event.target.checked });
@@ -44,9 +49,18 @@ class MenuAppBar extends React.Component {
     this.setState({ anchorEl: null });
   };
 
+  redirToHome= () => <Redirect to='/'></Redirect>
+
+  logout = () => {
+    localStorage.clear();
+    this.handleClose();
+    this.redirToHome();
+  }  
+
   render() {
     const { classes } = this.props;
-    const { auth, anchorEl } = this.state;
+    const { anchorEl } = this.state;
+    const auth = localStorage.getItem('uid') && localStorage.getItem("token")
     const open = Boolean(anchorEl);
 
     return (
@@ -57,7 +71,7 @@ class MenuAppBar extends React.Component {
               <MenuIcon />
             </IconButton>
             <Typography variant="h6" color="inherit" className={classes.grow}>
-              Photos
+              <NavLink to='/'>OPR</NavLink>
             </Typography>
             {auth ? (
               <div>
@@ -85,9 +99,10 @@ class MenuAppBar extends React.Component {
                 >
                   <MenuItem onClick={this.handleClose}>Profile</MenuItem>
                   <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                  <MenuItem style={{color: 'red'}} onClick={()=> this.logout()}>Logout</MenuItem>
                 </Menu>
               </div>
-            ): <Button>Login</Button>}
+            ) : <NavLink to='/login'><Button variant="contained" color='secondary'>Login</Button></NavLink>}
           </Toolbar>
         </AppBar>
       </div>

@@ -4,20 +4,30 @@ import { BrowserRouter } from 'react-router-dom';
 import './App.css';
 import NavBar from './components/NavBar'
 import Routes from './components/Routes';
+import { timingSafeEqual } from 'crypto';
 
 class App extends Component {
+
+  constructor() {
+    super()
+    this.state = {
+      auth: false
+    }
+  }
+
   render() {
+
+    let navBarProps = {
+    }
+
     return (
-<<<<<<< HEAD
       <div>
-        <NavBar/>
         <BrowserRouter>
-          <Routes/>
+          <div>
+            <NavBar {...navBarProps} />
+            <Routes />
+          </div>
         </BrowserRouter>
-=======
-      <div className="App">
-        <p>hello bbo</p>
->>>>>>> master
       </div>
     );
   }

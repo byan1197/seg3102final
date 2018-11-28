@@ -20,7 +20,6 @@ router.post('/signup', /*checkAuth,*/ (req, res, next) => {
         .exec()
         .then(user => {
             if (user.length > 0) {
-                console.log(user);
                 return res.status(409).json({
                     message: "email exists"
                 });
@@ -42,13 +41,11 @@ router.post('/signup', /*checkAuth,*/ (req, res, next) => {
                         user
                             .save()
                             .then(result => {
-                                console.log(result);
                                 res.status(201).json({
                                     message: 'user created'
                                 });
                             })
                             .catch(err => {
-                                console.log(err);
                                 res.status(500).json({
                                     error: 'invalid email entered'
                                 })
@@ -79,7 +76,6 @@ router.get('/', (req, res, next) => {
             res.status(200).json(response);
         })
         .catch(err => {
-            console.log(err);
             res.status(500).json({
                 error: err
             })
@@ -111,7 +107,7 @@ router.delete('/:userId', (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
-    User.find({ email: req.body.email })
+    User.find({ username: req.body.username })
         .exec()
         .then(user => {
             if (user.length < 1) {
@@ -126,7 +122,7 @@ router.post('/login', (req, res, next) => {
                         });
                     } else {
                         const token = jwt.sign({
-                            email: user[0].email,
+                            username: user[0].username,
                             userId: user[0]._id
                         },
                             "secret",
@@ -137,7 +133,8 @@ router.post('/login', (req, res, next) => {
                         res.status(200).json({
                             message: 'Login Successful',
                             token: token,
-                            uid: user[0]._id
+                            uid: user[0]._id,
+                            type: user[0].type
                         });
                     }
 
