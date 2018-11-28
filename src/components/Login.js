@@ -53,7 +53,8 @@ class Login extends Component {
     super(props);
     this.state = {
       errorMessage: null,
-      success: null
+      success: null,
+      toHome: false
     }
   }
 
@@ -65,11 +66,14 @@ class Login extends Component {
       username: e.target.username.value,
       password: e.target.password.value
     }).then(res => {
-      this.setState({
+      var newState = {
         errorMessage: res.message || null,
-        success: res.success || null
-      })
-      return (<Redirect to='/'></Redirect>)
+        success: res.success || null,
+      };
+
+      if (res.success)
+        newState['toHome'] = true;
+      this.setState(newState)
     })
 
   }
@@ -79,9 +83,10 @@ class Login extends Component {
     const { classes } = this.props;
     var error = this.state.errorMessage;
     var successMsg = this.state.success;
+    var redirectToHome = this.state.toHome;
 
-    console.log(successMsg)
-    console.log(error)
+    if (redirectToHome)
+      return <Redirect to='/'></Redirect>
 
     return (
       <main className={classes.main}>
