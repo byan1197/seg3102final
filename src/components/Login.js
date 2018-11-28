@@ -86,7 +86,7 @@ class Login extends Component {
     var redirectToHome = this.state.toHome;
 
     if (redirectToHome)
-      return <Redirect to='/'></Redirect>
+      return <Redirect to='/' />
 
     return (
       <main className={classes.main}>
