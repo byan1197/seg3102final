@@ -4,7 +4,6 @@ import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 import NavBar from './components/NavBar'
 import RouteList from './components/RouteList';
-import { timingSafeEqual } from 'crypto';
 
 class App extends Component {
   constructor() {
@@ -23,7 +22,7 @@ class App extends Component {
         {localStorage.getItem('token') ?
           (
             <div className='App'>
-              <NavBar />
+              <NavBar {...navBarProps} />
               <div className="App-Content">
                 <RouteList />
               </div>
