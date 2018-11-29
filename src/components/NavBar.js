@@ -13,7 +13,6 @@ import Button from '@material-ui/core/Button';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { NavLink, Redirect } from 'react-router-dom';
-import Fetcher from '../helpers/fetcher';
 
 const styles = {
   root: {
@@ -67,7 +66,7 @@ class MenuAppBar extends React.Component {
 
     return (
       <div className={classes.root}>
-        <AppBar color="primary" position="static">
+        <AppBar color="primary" position="fixed">
           <Toolbar>
             <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
               <MenuIcon />
