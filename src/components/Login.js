@@ -13,7 +13,7 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Fetcher from '../helpers/fetcher';
-import { Redirect } from 'react-router-dom';
+import { Redirect, withRouter } from 'react-router-dom';
 const styles = theme => ({
   main: {
     height: '100vh',
@@ -56,12 +56,11 @@ class Login extends Component {
       success: null,
       toHome: false
     }
+
+  this.handleLogin = this.handleLogin.bind(this);
   }
 
-
-
   handleLogin = (e) => {
-
     Fetcher.postLogin({
       username: e.target.username.value,
       password: e.target.password.value
@@ -70,23 +69,22 @@ class Login extends Component {
         errorMessage: res.message || null,
         success: res.success || null,
       };
-
-      if (res.success)
-        newState['toHome'] = true;
-      this.setState(newState)
+      this.props.history.push("/");
+      // if (res.success){
+      //   newState['toHome'] = true;
+      // }
+      // this.setState(newState);
     })
-
   }
 
   render() {
-
     const { classes } = this.props;
     var error = this.state.errorMessage;
     var successMsg = this.state.success;
     var redirectToHome = this.state.toHome;
 
-    if (redirectToHome)
-      return <Redirect to='/' />
+    // if (redirectToHome)
+    //   return <Redirect to='/' />
 
     return (
       <main className={classes.main}>
@@ -105,7 +103,6 @@ class Login extends Component {
                 successMsg
             }
           </Typography>
-
           <form className={classes.form} onSubmit={e => { e.preventDefault(); this.handleLogin(e) }}>
             <FormControl margin="normal" required fullWidth>
               <InputLabel htmlFor="username">Username</InputLabel>
@@ -133,9 +130,7 @@ class Login extends Component {
           </form>
         </Paper>
       </main>
-
     )
-
   }
 }
 

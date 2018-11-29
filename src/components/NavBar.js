@@ -12,7 +12,7 @@ import Button from '@material-ui/core/Button';
 // import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { NavLink, Redirect } from 'react-router-dom';
+import { NavLink, Redirect, withRouter } from 'react-router-dom';
 import Fetcher from '../helpers/fetcher';
 
 const styles = {
@@ -36,6 +36,10 @@ class MenuAppBar extends React.Component {
       anchorEl: null,
       toHome: false
     }
+
+    this.handleMenu = this.handleMenu.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   // handleChange = event => {
@@ -53,8 +57,8 @@ class MenuAppBar extends React.Component {
   logout = () => {
     this.handleClose();
     localStorage.clear();
-    this.setState({toHome: true})
-  }  
+    this.props.history.push("/login");
+  }
 
   render() {
     const { classes } = this.props;
@@ -62,16 +66,16 @@ class MenuAppBar extends React.Component {
     const auth = localStorage.getItem('uid') && localStorage.getItem("token")
     const open = Boolean(anchorEl);
 
-    if (this.state.toHome)
-      return <Redirect to='/'></Redirect>
-
     return (
       <div className={classes.root}>
         <AppBar color="primary" position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-              <MenuIcon />
-            </IconButton>
+            {auth ?
+              (<IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+                <MenuIcon />
+               </IconButton>) :
+               <div/>
+            }
             <Typography variant="h6" color="inherit" className={classes.grow}>
               <NavLink to='/'>OPR</NavLink>
             </Typography>
@@ -104,7 +108,7 @@ class MenuAppBar extends React.Component {
                   <MenuItem style={{color: 'red'}} onClick={()=> this.logout()}>Logout</MenuItem>
                 </Menu>
               </div>
-            ) : <NavLink to='/login'><Button variant="contained" color='secondary'>Login</Button></NavLink>}
+            ) : <div/>}
           </Toolbar>
         </AppBar>
       </div>
@@ -116,4 +120,4 @@ MenuAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MenuAppBar);
+export default withStyles(styles)(withRouter(MenuAppBar));
