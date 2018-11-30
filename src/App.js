@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Drawer, List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core/'
 import HomeIcon from '@material-ui/icons/Home';
 import ListIcon from '@material-ui/icons/List';
+import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import InsertDriveFileicon from '@material-ui/icons/InsertDriveFile';
 import { BrowserRouter as Router, Redirect } from 'react-router-dom';
@@ -13,6 +14,12 @@ const drawerContents = redirFn => {
   return {
     OWNER: (
       <List>
+        <ListItem button onClick={() => redirFn('/create_property')}>
+          <ListItemIcon>
+            <AddIcon />
+          </ListItemIcon>
+          <ListItemText primary="Add A Property" />
+        </ListItem>
         <ListItem button onClick={() => redirFn('/proplist')}>
           <ListItemIcon>
             <HomeIcon />
