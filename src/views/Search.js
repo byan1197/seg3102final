@@ -9,13 +9,15 @@ import Fetcher from '../helpers/fetcher';
 import Grid from '@material-ui/core/Grid';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Button, Typography } from '@material-ui/core';
+import { Redirect } from 'react-router-dom'
 
 const styles = theme => ({
     container: {
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
-        height: '100vh'
+        height: '100%',
+        width: '100%'
     },
     dense: {
         marginTop: 16,
@@ -35,7 +37,16 @@ class Search extends Component {
         this.state = {
             fields: false,
             selectedLocation: null,
-            values: {}
+            values: {
+                numBedrooms: null,
+                numOtherRooms: null,
+                numWashrooms: null,
+                maxRent: null,
+                minRent: null,
+                address: null
+            },
+            completeSearch: false,
+            propertyResults: []
         }
     }
 
@@ -50,12 +61,8 @@ class Search extends Component {
             })
     }
 
-    showFields = () => {
-        this.setState({ fields: true })
-    }
-
-    hideFields = () => {
-        this.setState({ fields: false })
+    toggleFields = () => {
+        this.setState({ fields: !this.state.fields })
     }
 
     handleSelect = (e) => {
@@ -66,32 +73,30 @@ class Search extends Component {
 
     updateFields = (name, value) => {
 
-        var regex = /^\d+$/;
-        var newValue = {};
-        if (name.includes('Rent'))
-            regex = /^[0-9]+([,.][0-9]+)?$/g;
+        var regex = name === 'address' ? /.*$/ : /^\d+$/;
+        var newValues = this.state.values;
+        var newValue = value;
+
+        console.log('regex.test(value)', regex.test(value), regex, value);
 
         if (!regex.test(value))
-            newValue[name] = ''
+            newValue = value.toString().slice(0, -1)
 
-        newValue[name] = value;
+        newValues[name] = newValue
 
-        this.setState({
-            values: {
-                ...this.state.values,
-                ...newValue
-            }
-        })
+        console.log('newavlues', newValues)
+
+        this.setState({ values: newValues })
     }
 
     search = () => {
-        var properties = [];
         var query = this.state.values;
         if (this.state.selectedLocation)
             query.location = this.state.selectedLocation;
         Fetcher.getProperties(query)
             .then(x => {
-                properties = x;
+                console.log(x);
+                this.setState({ completeSearch: true, propertyResults: x })
             })
     }
 
@@ -101,132 +106,155 @@ class Search extends Component {
         const fields = this.state.fields;
         const selectedLocation = this.state.selectedLocation;
 
-        return (
-            <div className={classes.container} style={
-                {
-                    backgroundImage: 'url("https://i.imgur.com/mZw0ElZ.png")',
-                    backgroundSize: 'cover',
-                    backgroundRepeat: 'no-repeat'
-                }
-            }>
-                <Paper
-                    onFocus={() => this.showFields()}
-                    style={{
-                        width: '60vw',
-                        margin: 'auto',
-                        marginTop: '20vh',
-                        padding: '10px',
-                        display: fields ? 'hidden' : 'block'
-                    }}>
-                    <TextField
-                        fullWidth
-                        id="outlined-dense"
-                        onChange={e => { this.updateFields('address', e.target.value) }}
-                        label="Search Properties Now! (Address)"
-                        className={classNames(classes.dense)}
-                        variant="outlined"
-                    />
-                    {
-                        fields &&
-                        <div>
-                            <Grid container spacing={16}>
-                                <Grid item sm={12} md={12} className={classes.gridSpacing}>
-                                    <Typography>
-                                        Only numbers and decimals allowed
-                                    </Typography>
-                                </Grid>
-                                <Grid item sm={12} md={4} className={classes.gridSpacing}>
-                                    <TextField
-                                        id="location"
-                                        value={selectedLocation}
-                                        select
-                                        fullWidth
-                                        label="Location"
-                                        className={classes.textField}
-                                        SelectProps={{
-                                            MenuProps: {
-                                                className: classes.menu,
-                                            },
-                                        }}
-                                        onChange={this.handleSelect}
-                                        margin="normal"
-                                    > {this.state.locations &&
-                                        this.state.locations.map(l => {
-                                            return <MenuItem key={l.value} value={l.value}>
-                                                {l.label}
-                                            </MenuItem>
-                                        })
-                                        }
-                                    </TextField>
-                                </Grid>
-                                <Grid item sm={12} md={4} className={classes.gridSpacing}>
-                                    <TextField
-                                        id="num-wash"
-                                        label="Num Washrooms"
-                                        fullWidth
-                                        onChange={e => { this.updateFields('numWashrooms', e.target.value) }}
-                                        className={classes.textField}
-                                        margin="normal"
-                                    ></TextField>
-                                </Grid>
-                                <Grid item sm={12} md={4} className={classes.gridSpacing}>
-                                    <TextField
-                                        id="num-bed"
-                                        label="Num Bedrooms"
-                                        fullWidth
-                                        onChange={e => { this.updateFields('numBedrooms', e.target.value) }}
-                                        className={classes.textField}
-                                        margin="normal"
-                                    ></TextField>
-                                </Grid>
-                                <Grid item sm={12} md={4} className={classes.gridSpacing}>
-                                    <TextField
-                                        id="num-other"
-                                        label="Num Other Rooms"
-                                        fullWidth
-                                        onChange={e => { this.updateFields('numOtherRooms', e.target.value) }}
-                                        className={classes.textField}
-                                        margin="normal"
-                                    ></TextField>
-                                </Grid>
-                                <Grid item sm={12} md={4} className={classes.gridSpacing}>
-                                    <TextField
-                                        id="min-p"
-                                        label="Min Rent"
-                                        fullWidth
-                                        onChange={e => { this.updateFields('minRent', e.target.value) }}
-                                        className={classes.textField}
-                                        margin="normal"
-                                        InputProps={{
-                                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                        }}
-                                    ></TextField>
-                                </Grid>
-                                <Grid item sm={12} md={4} className={classes.gridSpacing}>
-                                    <TextField
-                                        id="max-p"
-                                        label="Max Rent"
-                                        fullWidth
-                                        onChange={e => { this.updateFields('maxRent', e.target.value) }}
-                                        className={classes.textField}
-                                        margin="normal"
-                                        InputProps={{
-                                            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                                        }}
-                                    ></TextField>
-                                </Grid>
-                                <Grid item sm={12} md={12} className={classes.gridSpacing}>
-                                    <Button color="primary"
-                                        variant="contained"
-                                        onClick={() => { this.search() }}
-                                        fullWidth>
-                                        GO
-                                        </Button>
-                                </Grid>
-                            </Grid>
-                        </div>
+        if (this.state.completeSearch)
+            return <Redirect
+                to={{
+                    pathname: "/properties",
+                    state: {
+                        properties: this.state.propertyResults
                     }
-                </Paper>
+                }} />
+
+        return (
+            <div style={{ width: '100%' }}>
+                <div className={classes.container} style={
+                    {
+                        backgroundImage: 'url("https://i.imgur.com/mZw0ElZ.png")',
+                        backgroundSize: 'cover',
+                        backgroundRepeat: 'no-repeat'
+                    }
+                }>
+                    <Paper
+                        style={{
+                            width: '60vw',
+                            margin: 'auto',
+                            marginTop: '20vh',
+                            padding: '10px',
+                            display: fields ? 'hidden' : 'block'
+                        }}>
+                        <div style={{transitionTimingFunction: 'linear'}}>
+                            {
+                                fields &&
+                                <Grid container spacing={16}>
+                                    <Grid item sm={12} md={4} className={classes.gridSpacing}>
+                                        <TextField
+                                            id="location"
+                                            value={selectedLocation}
+                                            select
+                                            fullWidth
+                                            variant="outlined"
+                                            label="Location"
+                                            className={classes.textField}
+                                            SelectProps={{
+                                                MenuProps: {
+                                                    className: classes.menu,
+                                                },
+                                            }}
+                                            onChange={this.handleSelect}
+                                            margin="normal"
+                                        > {this.state.locations &&
+                                            this.state.locations.map(l => {
+                                                return <MenuItem key={l.value} value={l.value}>
+                                                    {l.label}
+                                                </MenuItem>
+                                            })
+                                            }
+                                        </TextField>
+                                    </Grid>
+                                    <Grid item sm={12} md={4} className={classes.gridSpacing}>
+                                        <TextField
+                                            id="num-wash"
+                                            label="Num Washrooms"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={this.state.values.numWashrooms}
+                                            onChange={e => { this.updateFields('numWashrooms', e.target.value) }}
+                                            className={classes.textField}
+                                            margin="normal"
+                                        ></TextField>
+                                    </Grid>
+                                    <Grid item sm={12} md={4} className={classes.gridSpacing}>
+                                        <TextField
+                                            id="num-bed"
+                                            label="Num Bedrooms"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={this.state.values.numBedrooms}
+                                            onChange={e => { this.updateFields('numBedrooms', e.target.value) }}
+                                            className={classes.textField}
+                                            margin="normal"
+                                        ></TextField>
+                                    </Grid>
+                                    <Grid item sm={12} md={4} className={classes.gridSpacing}>
+                                        <TextField
+                                            id="num-other"
+                                            label="Num Other Rooms"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={this.state.values.numOtherRooms}
+                                            onChange={e => { this.updateFields('numOtherRooms', e.target.value) }}
+                                            className={classes.textField}
+                                            margin="normal"
+                                        ></TextField>
+                                    </Grid>
+                                    <Grid item sm={12} md={4} className={classes.gridSpacing}>
+                                        <TextField
+                                            id="min-p"
+                                            label="Min Rent ($)"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={this.state.values.minRent}
+                                            onChange={e => { this.updateFields('minRent', e.target.value) }}
+                                            className={classes.textField}
+                                            margin="normal"
+                                        ></TextField>
+                                    </Grid>
+                                    <Grid item sm={12} md={4} className={classes.gridSpacing}>
+                                        <TextField
+                                            id="max-p"
+                                            label="Max Rent ($)"
+                                            fullWidth
+                                            variant="outlined"
+                                            value={this.state.values.maxRent}
+                                            onChange={e => { this.updateFields('maxRent', e.target.value) }}
+                                            className={classes.textField}
+                                            margin="normal"
+                                        ></TextField>
+                                    </Grid>
+                                    <Grid item sm={12} md={12} className={classes.gridSpacing}>
+                                        <Typography>
+                                            Only numbers and decimals allowed
+                                    </Typography>
+                                    </Grid>
+                                </Grid>
+                            }
+                        </div>
+                        <Button color="primary"
+                            style={{ margin: '10px 0px' }}
+                            variant="contained"
+                            fullWidth
+                            onClick={e => { e.preventDefault(); this.search() }}
+                            fullWidth>
+                            {
+                                selectedLocation || Object.keys(this.state.values).map(v => typeof (this.state.values[v])).includes('string') ?
+                                    'Search' :
+                                    'Get all properties!'
+                            }
+                        </Button>
+
+                        <Button color="secondary"
+                            style={{ marginTop: '10px' }}
+                            fullWidth
+                            onClick={this.toggleFields}
+                            fullWidth>
+                            {
+                                fields ?
+                                    'Hide' :
+                                    'Show options'
+                            }
+                        </Button>
+                    </Paper>
+                </div>
             </div>
         )
 

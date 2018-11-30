@@ -63,15 +63,42 @@ const Fetcher = {
     getProperties: function (query) {
         var queryString = '';
         Object.keys(query).forEach(x => {
-            queryString = queryString + x + '=' + query[x] + '&'
+            queryString = query[x] ? queryString + x + '=' + query[x] + '&' : queryString
         })
-        if (queryString.charAt(queryString.length-1) === '&')
+        if (queryString.charAt(queryString.length - 1) === '&')
             queryString.slice(0, -1);
         queryString = queryString.replace(' ', '%20')
-
         console.log('queryString', queryString)
-        return fetch(config.url + '/p/?' + queryString)
-            .then(res => res.json())
+        return fetch(config.url + '/p/?' + queryString, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': localStorage.getItem('token')
+            }
+        }).then(res => res.json())
+    },
+    postAddToVL: function (pid) {
+
+        const reqBody = {
+            propertyId: pid,
+            userId: localStorage.getItem('uid')
+        }
+
+        console.log('heyhey', reqBody)
+
+        return fetch(config.url + '/vl/', {
+            method: 'POST',
+            body: JSON.stringify(reqBody),
+            headers: {
+                'Content-Type': 'application/json',
+                'token': localStorage.getItem('token')
+            }
+        }).then(res => res.json())
+            .catch(e => {
+                return {
+                    message: e
+                }
+            })
     }
 
 }

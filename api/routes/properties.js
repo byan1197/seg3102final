@@ -89,6 +89,8 @@ router.get('/ownedby&uid=:uid', checkAuth, (req, res) => {
 //VIEWING ALL PROPERTIES
 router.get('/', checkAuth, (req, res) => {
 
+    // TODO: PROTECT THIS. ONLY CUSTOMERS!
+
     var where = {
         deleted: false,
         isAvailable: true
@@ -100,7 +102,7 @@ router.get('/', checkAuth, (req, res) => {
         .filter(q => !q.includes('Rent'))
         .forEach(p => {
             if (req.query[p])
-                where[p] = req.query[p]
+                where[p] = req.query[p].replace('%20', ' ');
         });
 
     if (req.query.maxRent)
