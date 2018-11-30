@@ -5,6 +5,7 @@ var env = process.env.NODE_ENV || "development";
 var config = require('./config/config.json')[env];
 var globalConf = require('./config/config.json')['global'];
 var cors = require('cors');
+
 const app = express();
 const userRoutes = require('./api/routes/users');
 const propertyRoutes = require('./api/routes/properties');
@@ -17,7 +18,7 @@ mongoose.connect(config.mongo.url, { useNewUrlParser: true })
 // END MONGO
 
 // EXPRESS USE
-
+app.use(cors())
 app.use(morgan('dev'));
 // app.use((req, res, next) => {
 //     res.header('Access-Control-Allow-Origin', '*');

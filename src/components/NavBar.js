@@ -80,10 +80,10 @@ class MenuAppBar extends React.Component {
     return (
       
       <div className={classes.root}>
-        <AppBar color="primary" position="static">
+        <AppBar color="primary" position="fixed">
           <Toolbar>
             {auth ?
-              (<IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+              (<IconButton onClick={this.props.openDrawer} className={classes.menuButton} color="inherit" aria-label="Menu">
                 <MenuIcon />
                </IconButton>) :
                <div/>
