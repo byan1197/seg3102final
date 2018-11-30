@@ -24,6 +24,7 @@ const Fetcher = {
                 };
             })
             .catch(e => {
+                console.log(e)
                 localStorage.clear();
                 return { message: "Error: invalid credentials" }
             })
@@ -46,6 +47,66 @@ const Fetcher = {
                 'Content-Type': 'application/json'
             }
         })
+    },
+
+    getUser: function () {
+        //`${config.url}/u/&uid=${localStorage.getItem('uid')}`
+        return fetch(config.url + '/u/&uid=' + localStorage.getItem('uid'), {
+            method: "GET",
+        }).then(res => res.json())
+    },
+
+    updateAccount: function (data) {
+
+        console.log(data);
+
+        return fetch(config.url + '/u/uid=' + localStorage.getItem('uid'), {
+            method: "PATCH",
+            body: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'token': localStorage.getItem('token')
+            }
+        }).then(res => res.json())
+    },
+    deleteAccount: function () {
+
+        return fetch(config.url + '/u/' + localStorage.getItem('uid'), {
+            method: "DELETE",
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'token': localStorage.getItem('token')
+            }
+        }).then(res => res.json())
+    },
+    createAccount: function (data) {
+
+        console.log(data);
+
+        return fetch(config.url + '/u/signup', {
+            method: "POST",
+            body: JSON.stringify(data),
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .then(res => {
+
+                if (!res.success)
+                    throw new Error("Could not create account");
+
+                return {
+                    success: "Account successfully created"
+                };
+            })
+            .catch(e => {
+
+                return { message: "Error: Username already exists" }
+            })
+
     },
     getLocations: function () {
         return fetch(config.url + '/p/locations', {

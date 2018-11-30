@@ -81,41 +81,40 @@ class Login extends Component {
     const { classes } = this.props;
     var error = this.state.errorMessage;
     var successMsg = this.state.success;
-
-    return (
-      <main className={classes.main}>
-        <CssBaseline />
-        <Paper className={classes.paper}>
-          <Avatar className={classes.avatar}>
-            <LockIcon />
-          </Avatar>
-          <Typography component="h1" variant="h5">
-            Login
-          </Typography>
-          <Typography component="p" variant="body1" style={error ? { color: 'red' } : { color: 'green' }}>
-            {
+     return (
+       <main className={classes.main}>
+         <CssBaseline />
+         <Paper className={classes.paper}>
+           <Avatar className={classes.avatar}>
+             <LockIcon />
+           </Avatar>
+           <Typography component="h1" variant="h5">
+             Login
+           </Typography>
+           <Typography component="p" variant="body1" style={error ? { color: 'red' } : { color: 'green' }}>
+             {
               error ?
                 error :
                 successMsg
             }
           </Typography>
-          <form className={classes.form} onSubmit={e => { e.preventDefault(); this.handleLogin(e) }}>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="username">Username</InputLabel>
-              <Input id="username" name="username" autoFocus />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <Input name="password" type="password" id="password" autoComplete="current-password" />
-            </FormControl>
-            <Button
-              type="submit"
-              fullWidth
+           <form className={classes.form} onSubmit={e => { e.preventDefault(); this.handleLogin(e) }}>
+             <FormControl margin="normal" required fullWidth>
+               <InputLabel htmlFor="username">Username</InputLabel>
+               <Input id="username" name="username" autoFocus />
+             </FormControl>
+             <FormControl margin="normal" required fullWidth>
+               <InputLabel htmlFor="password">Password</InputLabel>
+               <Input name="password" type="password" id="password" autoComplete="current-password" />
+             </FormControl>
+             <Button
+               type="submit"
+               fullWidth 
               margin='normal'
               variant="contained"
               color="primary"
               className={classes.submit}
-            >
+            > 
               LOGIN
             </Button>
             <Button
@@ -125,8 +124,8 @@ class Login extends Component {
               color="secondary"> Setup an account with an agent</Button>
           </form>
         </Paper>
-      </main>
-    )
+       </main>
+     )
   }
 }
 

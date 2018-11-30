@@ -11,7 +11,7 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 // import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { NavLink, withRouter } from 'react-router-dom';
+import { NavLink, withRouter, Redirect } from 'react-router-dom';
 
 const styles = {
   root: {
@@ -32,7 +32,9 @@ class MenuAppBar extends React.Component {
     super(props);
     this.state = {
       anchorEl: null,
-      toHome: false
+      toHome: false,
+      user: localStorage.getItem('type'),
+      toAccount: false
     }
 
     this.handleMenu = this.handleMenu.bind(this);
@@ -40,9 +42,10 @@ class MenuAppBar extends React.Component {
     this.logout = this.logout.bind(this);
   }
 
-  // handleChange = event => {
-  //   this.setState({ auth: event.target.checked });
-  // };
+  // componentDidMount(){
+  //   this.setState({user : localStorage.getItem('type')})
+  // }
+
 
   handleMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -58,13 +61,24 @@ class MenuAppBar extends React.Component {
     this.props.history.push("/login");
   }
 
+  viewAccount = () => {
+    this.handleClose();
+    this.props.history.push("/me");
+  } 
+
   render() {
     const { classes } = this.props;
     const { anchorEl } = this.state;
     const auth = localStorage.getItem('uid') && localStorage.getItem("token")
     const open = Boolean(anchorEl);
 
+
+   
+    if (this.state.toAccount)
+      return <Redirect push to='/me'></Redirect>
+
     return (
+      
       <div className={classes.root}>
         <AppBar color="primary" position="fixed">
           <Toolbar>
@@ -102,7 +116,8 @@ class MenuAppBar extends React.Component {
                   onClose={this.handleClose}
                 >
                   <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                  <MenuItem onClick={this.viewAccount}>My account</MenuItem>
+                  {localStorage.getItem('type')== 'AGENT' ? <MenuItem>Create account</MenuItem> : null}
                   <MenuItem style={{color: 'red'}} onClick={()=> this.logout()}>Logout</MenuItem>
                 </Menu>
               </div>

@@ -2,7 +2,10 @@ import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
 import Login from './Login';
 import Home from '../views/Home';
-import Test from '../views/Test';
+import Account from './Account';
+import CreateAccount from './CreateAccount';
+import Success from './Success';
+import Test from '../views/Test'
 import Search from '../views/Search';
 import Properties from '../views/Properties';
 
@@ -10,6 +13,9 @@ const RouteList = () => (
   <Switch>
     <PrivateRoute exact path="/" component={Home} />
     <PrivateRoute path="/test" component={Test} />
+    <PrivateRoute path="/create_account" component = { CreateAccount} />
+    <PrivateRoute path="/success" component = { Success} />
+    <PrivateRoute path="/me" component={Account} />
     <Route path="/login" component={Login} />
     <PrivateRoute path="/search" component={Search} />
     <PrivateRoute path="/properties" component={Properties} />
