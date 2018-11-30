@@ -13,10 +13,11 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Fetcher from '../helpers/fetcher';
+import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
   main: {
-    height: '100vh',
+    height: '100%',
     width: 'auto',
     display: 'block', // Fix IE 11 issue.
     marginLeft: theme.spacing.unit * 3,
@@ -81,6 +82,9 @@ class Login extends Component {
     const { classes } = this.props;
     var error = this.state.errorMessage;
     var successMsg = this.state.success;
+
+    if (localStorage.getItem('token'))
+      return <Redirect push to="/"/>
 
     return (
       <main className={classes.main}>
