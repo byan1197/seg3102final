@@ -48,7 +48,7 @@ router.post('/',  (req, res, next) =>{
     .then(results => {
         
         if(results[1].rent > results[0].maxRent){
-            res.status(400).json({
+            return res.status(400).json({
                 message: "Cannot add property. Maximum allowed rent is exceeded"
             });
         }
@@ -67,7 +67,7 @@ router.post('/',  (req, res, next) =>{
                 });
                 vList.save().then(result => {
 
-                    res.send({
+                    return res.send({
                         message : 'Property added to visiting list successfully',
                         Property : {
                             address : result.address,
@@ -89,12 +89,12 @@ router.post('/',  (req, res, next) =>{
                 VisitingList.updateOne({customerId : userId}, {$set : vl})
                     .exec()
                     .then(result => {
-                        res.status(200).json({
+                        return res.status(200).json({
                             result: vl
                         });
                     })
                     .catch(err => {
-                        res.status(500).json({
+                        return res.status(500).json({
                             error : err
                         });
                 
