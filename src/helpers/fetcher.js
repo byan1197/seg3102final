@@ -39,14 +39,53 @@ const Fetcher = {
             }
         }).then();
     },
-    addProperty: function (data) {
-        return fetch(config.url + "/p", {
-            method: "POST",
-            body: data,
-            headers: {
-                'Content-Type': 'application/json'
-            }
+    addProperty: function (images, data) {
+        //images [base64 strings]
+        var promiseArr = [];
+        images.forEach(i => {
+            promiseArr.push(
+                new Promise((resolve, reject) => {
+                    data = {
+                        image: i
+                    }
+                    // fetch('https://api.imgur.com/oauth2/authorize?client_id=' + config.imgur.cId + '&response_type=token')
+                    fetch('https://api.imgur.com/3/image', {
+                        method: "POST",
+                        body: data,
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': 'Client-ID ' + config.imgur.clientId
+                        }
+                    })
+                        .then(res => res.json())
+                        .then(res => {
+                            resolve(res.data.link)
+                        })
+                        .catch(error => reject());
+                })
+            )
         })
+
+        Promise.all(promiseArr)
+            .then(results => {
+                data.images = results;
+                return;
+            })
+            .then(() => {
+                return fetch(config.url + "/p", {
+                    method: "POST",
+                    body: data,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(res => res.json())
+                    .catch(e => {
+                        return { message: e }
+                    })
+
+
+
+            })
     },
 
     getUser: function () {
@@ -160,8 +199,7 @@ const Fetcher = {
                     message: e
                 }
             })
-    }
-
+    },
 }
 
 export default Fetcher

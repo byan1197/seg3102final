@@ -1,5 +1,9 @@
 {
     "development": {
-        "url": "http://localhost:5000"
+        "url": "http://localhost:5000",
+        "imgur": {
+            "clientId": "766ec5e93a68464",
+            "clientSecret": "2d7c1ea725eefb7b14d539ee514623eceab81b5b"
+        }
     }
 }
