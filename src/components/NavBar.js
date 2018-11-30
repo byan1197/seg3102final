@@ -7,13 +7,11 @@ import Typography from '@material-ui/core/Typography';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import AccountCircle from '@material-ui/icons/AccountCircle';
-import Button from '@material-ui/core/Button';
 // import FormControlLabel from '@material-ui/core/FormControlLabel';
 // import FormGroup from '@material-ui/core/FormGroup';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
-import { NavLink, Redirect } from 'react-router-dom';
-import Fetcher from '../helpers/fetcher';
+import { NavLink, withRouter, Redirect } from 'react-router-dom';
 
 const styles = {
   root: {
@@ -38,15 +36,16 @@ class MenuAppBar extends React.Component {
       user: localStorage.getItem('type'),
       toAccount: false
     }
+
+    this.handleMenu = this.handleMenu.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.logout = this.logout.bind(this);
   }
 
   // componentDidMount(){
   //   this.setState({user : localStorage.getItem('type')})
   // }
 
-  // handleChange = event => {
-  //   this.setState({ auth: event.target.checked });
-  // };
 
   handleMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
@@ -59,12 +58,12 @@ class MenuAppBar extends React.Component {
   logout = () => {
     this.handleClose();
     localStorage.clear();
-    this.setState({toHome: true})
-  }  
+    this.props.history.push("/login");
+  }
 
   viewAccount = () => {
     this.handleClose();
-    this.setState({toAccount: true})
+    this.props.history.push("/me");
   } 
 
   render() {
@@ -73,18 +72,22 @@ class MenuAppBar extends React.Component {
     const auth = localStorage.getItem('uid') && localStorage.getItem("token")
     const open = Boolean(anchorEl);
 
-    if (this.state.toHome)
-      return <Redirect to='/'></Redirect>
+
+   
     if (this.state.toAccount)
-      return this.props.history.push('/account');
-    console.log(this.state.user);
+      return <Redirect push to='/me'></Redirect>
+
     return (
+      
       <div className={classes.root}>
         <AppBar color="primary" position="static">
           <Toolbar>
-            <IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
-              <MenuIcon />
-            </IconButton>
+            {auth ?
+              (<IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+                <MenuIcon />
+               </IconButton>) :
+               <div/>
+            }
             <Typography variant="h6" color="inherit" className={classes.grow}>
               <NavLink to='/'>OPR</NavLink>
             </Typography>
@@ -114,11 +117,11 @@ class MenuAppBar extends React.Component {
                 >
                   <MenuItem onClick={this.handleClose}>Profile</MenuItem>
                   <MenuItem onClick={this.viewAccount}>My account</MenuItem>
-                  {this.state.user== 'AGENT' ? <MenuItem>Create account</MenuItem> : null}
+                  {localStorage.getItem('type')== 'AGENT' ? <MenuItem>Create account</MenuItem> : null}
                   <MenuItem style={{color: 'red'}} onClick={()=> this.logout()}>Logout</MenuItem>
                 </Menu>
               </div>
-            ) : <NavLink to='/login'><Button variant="contained" color='secondary'>Login</Button></NavLink>}
+            ) : <div/>}
           </Toolbar>
         </AppBar>
       </div>
@@ -130,4 +133,4 @@ MenuAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(MenuAppBar);
+export default withStyles(styles)(withRouter(MenuAppBar));
