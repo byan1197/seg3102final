@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import classNames from 'classnames';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
-import InputAdornment from '@material-ui/core/InputAdornment';
 import { withStyles } from '@material-ui/core/styles';
 import Fetcher from '../helpers/fetcher';
 import Grid from '@material-ui/core/Grid';
