@@ -34,9 +34,15 @@ class MenuAppBar extends React.Component {
     super(props);
     this.state = {
       anchorEl: null,
-      toHome: false
+      toHome: false,
+      user: localStorage.getItem('type'),
+      toAccount: false
     }
   }
+
+  // componentDidMount(){
+  //   this.setState({user : localStorage.getItem('type')})
+  // }
 
   // handleChange = event => {
   //   this.setState({ auth: event.target.checked });
@@ -56,6 +62,11 @@ class MenuAppBar extends React.Component {
     this.setState({toHome: true})
   }  
 
+  viewAccount = () => {
+    this.handleClose();
+    this.setState({toAccount: true})
+  } 
+
   render() {
     const { classes } = this.props;
     const { anchorEl } = this.state;
@@ -64,7 +75,9 @@ class MenuAppBar extends React.Component {
 
     if (this.state.toHome)
       return <Redirect to='/'></Redirect>
-
+    if (this.state.toAccount)
+      return this.props.history.push('/account');
+    console.log(this.state.user);
     return (
       <div className={classes.root}>
         <AppBar color="primary" position="static">
@@ -100,7 +113,8 @@ class MenuAppBar extends React.Component {
                   onClose={this.handleClose}
                 >
                   <MenuItem onClick={this.handleClose}>Profile</MenuItem>
-                  <MenuItem onClick={this.handleClose}>My account</MenuItem>
+                  <MenuItem onClick={this.viewAccount}>My account</MenuItem>
+                  {this.state.user== 'AGENT' ? <MenuItem>Create account</MenuItem> : null}
                   <MenuItem style={{color: 'red'}} onClick={()=> this.logout()}>Logout</MenuItem>
                 </Menu>
               </div>

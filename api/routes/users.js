@@ -7,23 +7,23 @@ const jwt = require('jsonwebtoken');
 const checkAuth = require('../middleware/check_auth');
 
 router.post('/signup', /*checkAuth,*/ (req, res, next) => {
-
+    console.log(req);
     // if (req.get('type') !== "AGENT")
     //     return res.status(400).json({
     //         message: "Unauthorized to create account"
     //     })
 
     User.find({
-        email: req.body.email,
         username: req.body.username
     })
         .exec()
         .then(user => {
             if (user.length > 0) {
                 return res.status(409).json({
-                    message: "email exists"
+                    message: "username exists"
                 });
             } else {
+                console.log("HASHHH")
                 const hash = bcrypt.hash(req.body.password, 10, (err, hash) => {
                     if (err) {
                         return res.status(500).json({
@@ -36,14 +36,15 @@ router.post('/signup', /*checkAuth,*/ (req, res, next) => {
                             password: hash,
                             type: req.body.type,
                             name: req.body.name,
+                            lastName : req.body.lastName,
                             username: req.body.username,
-                            maxRent: req.body.maxRent
+                            maxRent: 400
                         });
                         user
                             .save()
                             .then(result => {
                                 res.status(201).json({
-                                    message: 'user created'
+                                    success: 'user created'
                                 });
                             })
                             .catch(err => {
@@ -84,20 +85,22 @@ router.get('/', (req, res, next) => {
 })
 
 router.get('/&uid=:uid', checkAuth, (req, res, next) => {
-    User.findById({_id: req.query.uid}).exec((err, u) => {
+    
+    User.findById({_id: req.params.uid}).exec((err, u) => {
         if(err)
             return res.status(500).json({message: 'Could not find user'})
         res.status(201).json(u)
     })
 })
 
-router.delete('/:userId', checkAuth, (req, res, next) => {
-    User.deleteOne({ _id: req.params.userId })
+router.delete('/:uid', checkAuth, (req, res, next) => {
+    console.log("here")
+    User.deleteOne({ _id: req.params.uid })
         .exec()
         .then(result => {
             res.status(200).json({
                 message: 'User successfully deleted',
-                userId: req.body.userId
+
             });
         })
         .catch(err => {
@@ -108,6 +111,7 @@ router.delete('/:userId', checkAuth, (req, res, next) => {
 });
 
 router.post('/login', (req, res, next) => {
+    console.log("here")
     User.find({ username: req.body.username })
         .exec()
         .then(user => {
@@ -145,5 +149,52 @@ router.post('/login', (req, res, next) => {
         .catch(err => {
             res.status(500).json(err);
         })
+})
+
+router.patch('/uid=:uid', (req, res, next) => {
+    userId = req.params.uid
+    //console.log("here");
+    const where = {
+        _id: userId
+    }
+    console.log(req.body.ogpassword);
+    User.findById({_id: userId}).exec((err, u) => {
+        bcrypt.compare(req.body.ogpassword, u.password, (err, result) => {
+            if (err || !result) {
+                return res.status(401).json({
+                    message: 'Incorrect Password'
+                });
+            }
+
+            const hash = bcrypt.hash(req.body.password, 10, (err, hash) => {
+                if (err) {
+                    return res.status(500).json({
+                        error: err
+                    });
+                }
+            set= {};
+            set = {
+                email : req.body.email,
+                password : hash
+            }
+
+            User.updateOne(where, { $set: set })
+                .exec((err, result) => {
+                    if (err)
+                        return res.status(500).json({
+                            error: err
+                        })
+                    return res.status(200).json({
+                        email : req.body.email
+                        
+                    })
+                })
+                
+    })
+    
+
+        })
+    
+    })
 })
 module.exports = router;
