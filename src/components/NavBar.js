@@ -16,6 +16,7 @@ import { NavLink, withRouter } from 'react-router-dom';
 const styles = {
   root: {
     flexGrow: 1,
+    zIndex: 5
   },
   grow: {
     flexGrow: 1,

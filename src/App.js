@@ -9,8 +9,7 @@ class App extends Component {
   constructor() {
     super()
     this.state = {
-      auth: false,
-      isNavbar: false
+      auth: false
     }
   }
 
@@ -19,24 +18,12 @@ class App extends Component {
     }
     return (
       <Router>
-        {localStorage.getItem('token') ?
-          (
             <div className='App'>
               <NavBar {...navBarProps} />
               <div className="App-Content">
                 <RouteList />
               </div>
             </div>
-          ) :
-          (
-            <div className='App'>
-              <NavBar />
-              <div className="App-Content">
-                <RouteList />
-                </div>
-            </div>
-          )
-        }
       </Router>
     );
   }
