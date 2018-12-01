@@ -216,6 +216,20 @@ const Fetcher = {
                     message: e
                 }
             })
+    },
+    getOwnerProperties: function () {
+        return fetch(config.url + '/p/ownedby/' + localStorage.getItem('uid'), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': localStorage.getItem('token')
+            }
+        }).then(res => res.json())
+            .catch(e => {
+                return {
+                    message: e
+                }
+            })
     }
 }
 

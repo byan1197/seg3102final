@@ -20,7 +20,7 @@ const drawerContents = redirFn => {
           </ListItemIcon>
           <ListItemText primary="Add A Property" />
         </ListItem>
-        <ListItem button onClick={() => redirFn('/proplist')}>
+        <ListItem button onClick={() => redirFn('/ownerprops')}>
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
