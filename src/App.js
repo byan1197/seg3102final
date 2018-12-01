@@ -5,7 +5,7 @@ import ListIcon from '@material-ui/icons/List';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import InsertDriveFileicon from '@material-ui/icons/InsertDriveFile';
-import { BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 import NavBar from './components/NavBar'
 import RouteList from './components/RouteList';
