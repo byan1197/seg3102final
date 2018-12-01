@@ -103,18 +103,18 @@ class Login extends Component {
                 successMsg
             }
           </Typography>
-          <form className={classes.form} onSubmit={e => { e.preventDefault(); this.handleLogin(e) }}>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="username">Username</InputLabel>
-              <Input id="username" name="username" autoFocus />
-            </FormControl>
-            <FormControl margin="normal" required fullWidth>
-              <InputLabel htmlFor="password">Password</InputLabel>
-              <Input name="password" type="password" id="password" autoComplete="current-password" />
-            </FormControl>
-            <Button
-              type="submit"
-              fullWidth
+           <form className={classes.form} onSubmit={e => { e.preventDefault(); this.handleLogin(e) }}>
+             <FormControl margin="normal" required fullWidth>
+               <InputLabel htmlFor="username">Username</InputLabel>
+               <Input id="username" name="username" autoFocus />
+             </FormControl>
+             <FormControl margin="normal" required fullWidth>
+               <InputLabel htmlFor="password">Password</InputLabel>
+               <Input name="password" type="password" id="password" autoComplete="current-password" />
+             </FormControl>
+             <Button
+               type="submit"
+               fullWidth
               margin='normal'
               variant="contained"
               color="primary"
@@ -129,8 +129,8 @@ class Login extends Component {
               color="secondary"> Setup an account with an agent</Button>
           </form>
         </Paper>
-      </main>
-    )
+       </main>
+     )
   }
 }
 
