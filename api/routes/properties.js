@@ -8,25 +8,23 @@ const config = require('../../config/config.json')['global']
 
 //creating property
 router.post('/', checkAuth, (req, res, next) => {
-
+    console.log("yoyo");
     if (req.body.images < 5)
         return res.status(400).json({
             message: 'Not enough photos'
         });
 
-    if (!(config.locations.includes(req.body.location)))
-        return res.status(400).json({
-            message: 'Location not recognized'
-        });
+    // if (!(config.locations.includes(req.body.location)))
+    //     return res.status(400).json({
+    //         message: 'Location not recognized'
+    //     });
 
 
     const property = new Property({
         _id: new mongoose.Types.ObjectId(),
         owner: req.body.owner,
         address: req.body.address,
-        isAvailable: req.body.isAvailable,
         createdAt: new Date().toString(),
-        leasedTo: req.body.leasedTo,
         images: req.body.images,
         deleted: false,
         rent: req.body.rent,
@@ -42,7 +40,6 @@ router.post('/', checkAuth, (req, res, next) => {
             message: 'Created Property successfully',
             createdProperty: {
                 address: result.address,
-                isAvailable: result.isAvailable,
                 owner: result.owner,
                 _id: result._id
 

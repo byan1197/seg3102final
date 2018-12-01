@@ -39,19 +39,22 @@ const Fetcher = {
             }
         }).then();
     },
-    addProperty: function (images, data) {
+    addProperty: function (fields, cb) {
+        var data = {};
         //images [base64 strings]
+        console.log(fields.images, " imagew")
         var promiseArr = [];
-        images.forEach(i => {
+        fields.images.forEach(i => {
             promiseArr.push(
                 new Promise((resolve, reject) => {
-                    data = {
+
+                    var data = {
                         image: i
                     }
                     // fetch('https://api.imgur.com/oauth2/authorize?client_id=' + config.imgur.cId + '&response_type=token')
                     fetch('https://api.imgur.com/3/image', {
                         method: "POST",
-                        body: data,
+                        body: JSON.stringify(data.image.substring(data.image.indexOf(',')+1)),
                         headers: {
                             'Content-Type': 'application/json',
                             'Authorization': 'Client-ID ' + config.imgur.clientId
@@ -65,22 +68,36 @@ const Fetcher = {
                 })
             )
         })
+          
 
         Promise.all(promiseArr)
-            .then(results => {
-                data.images = results;
-                return;
-            })
-            .then(() => {
+            .then((results) => {
+                fields.images = results;
+                console.log(fields);
+            
                 return fetch(config.url + "/p", {
                     method: "POST",
-                    body: data,
+                    body: JSON.stringify(fields),
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'token': localStorage.getItem('token')
+
                     }
                 }).then(res => res.json())
+                .then(res => {
+
+                    if (!res.status == '201')
+                        cb('error',"Could not create account");
+    
+                    
+                        else{
+                            cb('success', ("Property successfully created"))
+                        }
+                    
+                })
                     .catch(e => {
-                        return { message: e }
+                        return { error: e }
                     })
 
 
