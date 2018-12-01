@@ -14,7 +14,7 @@ const CarouselWrapper = styled.div`
   width: 100%;
 `;
 const ImgTint = styled.div`
-  background-color: rgba(10,10,10,1);
+  background-color: rgba(211,211,211,1);
   background-blend-mode: multiply;
 `;
 const SlideImg = styled.img`
