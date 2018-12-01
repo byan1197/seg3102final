@@ -13,10 +13,11 @@ import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Fetcher from '../helpers/fetcher';
+import { Redirect } from 'react-router-dom';
 
 const styles = theme => ({
   main: {
-    height: '100vh',
+    height: '100%',
     width: 'auto',
     display: 'block', // Fix IE 11 issue.
     marginLeft: theme.spacing.unit * 3,
@@ -81,18 +82,22 @@ class Login extends Component {
     const { classes } = this.props;
     var error = this.state.errorMessage;
     var successMsg = this.state.success;
-     return (
-       <main className={classes.main}>
-         <CssBaseline />
-         <Paper className={classes.paper}>
-           <Avatar className={classes.avatar}>
-             <LockIcon />
-           </Avatar>
-           <Typography component="h1" variant="h5">
-             Login
-           </Typography>
-           <Typography component="p" variant="body1" style={error ? { color: 'red' } : { color: 'green' }}>
-             {
+
+    if (localStorage.getItem('token'))
+      return <Redirect push to="/"/>
+
+    return (
+      <main className={classes.main}>
+        <CssBaseline />
+        <Paper className={classes.paper}>
+          <Avatar className={classes.avatar}>
+            <LockIcon />
+          </Avatar>
+          <Typography component="h1" variant="h5">
+            Login
+          </Typography>
+          <Typography component="p" variant="body1" style={error ? { color: 'red' } : { color: 'green' }}>
+            {
               error ?
                 error :
                 successMsg
@@ -109,12 +114,12 @@ class Login extends Component {
              </FormControl>
              <Button
                type="submit"
-               fullWidth 
+               fullWidth
               margin='normal'
               variant="contained"
               color="primary"
               className={classes.submit}
-            > 
+            >
               LOGIN
             </Button>
             <Button

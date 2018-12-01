@@ -16,6 +16,7 @@ import { NavLink, withRouter, Redirect } from 'react-router-dom';
 const styles = {
   root: {
     flexGrow: 1,
+    zIndex: 5
   },
   grow: {
     flexGrow: 1,
@@ -91,8 +92,10 @@ class MenuAppBar extends React.Component {
                </IconButton>) :
                <div/>
             }
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              <NavLink to='/'>OPR</NavLink>
+            <Typography variant="h5" color="default" className={classes.grow}>
+              <NavLink style={{textDecoration: 'none', color: 'white', fontWeight: '100'}} to='/'>
+                OPR System
+              </NavLink>
             </Typography>
             {auth ? (
               <div>
