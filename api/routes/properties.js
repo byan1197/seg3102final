@@ -24,7 +24,7 @@ router.post('/', checkAuth, (req, res, next) => {
         _id: new mongoose.Types.ObjectId(),
         owner: req.body.owner,
         address: req.body.address,
-        isAvailable: req.body.isAvailable,
+        isAvailable: true,
         createdAt: new Date().toString(),
         leasedTo: req.body.leasedTo,
         images: req.body.images,
@@ -57,7 +57,7 @@ router.post('/', checkAuth, (req, res, next) => {
 });
 
 // GETTING ALL PROPERTIES FROM OWNER WITH :uid
-router.get('/ownedby&uid=:uid', checkAuth, (req, res) => {
+router.get('/ownedby/:uid', checkAuth, (req, res) => {
 
     if (!req.params.uid) {
         res.status(400).json({
@@ -68,19 +68,21 @@ router.get('/ownedby&uid=:uid', checkAuth, (req, res) => {
 
     var uid = req.params.uid;
 
+    console.log(uid)
+
     Property.find({
-        owner: mongoose.Types.ObjectId(uid)
     })
         .populate('owner')
         .exec((err, docs) => {
             if (err) {
                 res.status(400).json({
-                    error: err
+                    error: err,
+                    message: 'Something went wrong'
                 })
                 return;
             }
-
-            res.send(docs);
+            console.log('docs,',  docs)
+            res.status(200).json(docs);
 
         })
 

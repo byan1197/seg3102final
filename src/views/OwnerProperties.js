@@ -1,6 +1,6 @@
 import { Card, CardContent, CardMedia, Grid, Typography, Fab, Tooltip } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import CloseIcon from '@material-ui/icons/Close';
+import EditIcon from '@material-ui/icons/Edit';
 import PropTypes from 'prop-types';
 import { Component, default as React } from 'react';
 import 'react-image-gallery/styles/css/image-gallery.css';
@@ -33,39 +33,42 @@ const styles = theme => ({
     }
 });
 
-class VistiingList extends Component {
+class OwnerProperties extends Component {
+
     constructor(props) {
         super(props);
         this.state = {
             message: '',
-            visitingListItems: []
+            properties: []
         }
     }
 
+
     componentDidMount() {
-        Fetcher.getVL()
+        Fetcher.getOwnerProperties()
             .then(res => {
-                if (res.message) {
+
+                console.log('res', res)
+
+                if (res.error || res.err) {
                     this.setState({
-                        message: res.message + ' Go look for some properties!'
+                        message: res.error.message
                     })
                     return;
                 }
-                this.setState({ visitingListItems: res.list });
+                this.setState({ properties: res });
             });
     }
 
     render() {
 
         const { classes } = this.props;
-        //test
-        console.log('this.state.visitingListItems', this.state.visitingListItems)
 
         return (
             <div style={{ width: '100%' }}>
                 <div className={classes.container}>
                     {
-                        this.state.visitingListItems.length === 0 &&
+                        this.state.properties.length === 0 &&
                         <Card style={{
                             display: 'flex',
                             justifyContent: 'center',
@@ -82,7 +85,7 @@ class VistiingList extends Component {
                         </Card>
                     }
                     {
-                        this.state.visitingListItems.map((v, i) => (
+                        this.state.properties.map((p, i) => (
                             <Card className={classes.ptyCard} >
                                 <CardMedia className={classes.cardImg} image='https://sofriendsofhospice.org/wp-content/uploads/2017/05/014-300x300.jpg' />
                                 <div className={classes.details}>
@@ -90,26 +93,26 @@ class VistiingList extends Component {
                                         <Grid container spacing={0}>
                                             <Grid item md={3}>
                                                 <Typography>
-                                                    <b>Address</b>: {v.address}
+                                                    <b>Address</b>: {p.address}
                                                 </Typography>
                                                 <Typography>
-                                                    <b>Location</b>: {v.location}
-                                                </Typography>
-                                            </Grid>
-                                            <Grid item md={3}>
-                                                <Typography>
-                                                    <b>Rent</b>: ${v.rent}
-                                                </Typography>
-                                                <Typography>
-                                                    <b>Bedroom(s)</b>: {v.numBedrooms}
+                                                    <b>Location</b>: {p.location}
                                                 </Typography>
                                             </Grid>
                                             <Grid item md={3}>
                                                 <Typography>
-                                                    <b>Washroom(s)</b>: {v.numWashrooms}
+                                                    <b>Rent</b>: ${p.rent}
                                                 </Typography>
                                                 <Typography>
-                                                    <b>Other Room(s)</b>: {v.numOtherRooms}
+                                                    <b>Bedroom(s)</b>: {p.numBedrooms}
+                                                </Typography>
+                                            </Grid>
+                                            <Grid item md={3}>
+                                                <Typography>
+                                                    <b>Washroom(s)</b>: {p.numWashrooms}
+                                                </Typography>
+                                                <Typography>
+                                                    <b>Other Room(s)</b>: {p.numOtherRooms}
                                                 </Typography>
                                             </Grid>
                                             <Grid item md={3} style={
@@ -125,7 +128,7 @@ class VistiingList extends Component {
                                                     <Fab
                                                         color='primary'
                                                         size='small'>
-                                                        <CloseIcon />
+                                                        <EditIcon />
                                                     </Fab>
                                                 </Tooltip>
                                             </Grid>
@@ -139,13 +142,11 @@ class VistiingList extends Component {
                 </div>
             </div>
         )
-
     }
-
 }
 
-VistiingList.propTypes = {
+OwnerProperties.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default withStyles(styles)(VistiingList);
+export default withStyles(styles)(OwnerProperties);

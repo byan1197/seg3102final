@@ -8,7 +8,9 @@ import Success from './Success';
 import Test from '../views/Test'
 import Search from '../views/Search';
 import Properties from '../views/Properties';
+import VisitingList from '../views/VisitingList'
 import CreateProperty from '../views/CreateProperty';
+import OwnerProperties from '../views/OwnerProperties';
 
 const RouteList = () => (
   <Switch>
@@ -20,8 +22,9 @@ const RouteList = () => (
     <Route path="/login" component={Login} />
     <PrivateRoute path="/search" component={Search} />
     <PrivateRoute path="/properties" component={Properties} />
-    {/* <PrivateRoute path="/visitinglist" component={Properties} /> */}
+    <PrivateRoute path="/visitinglist" component={VisitingList} />
     <PrivateRoute path="/create_property" component={CreateProperty} />
+    <PrivateRoute path="/ownerprops" component={OwnerProperties} />
   </Switch>
 )
 

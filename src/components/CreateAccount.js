@@ -62,11 +62,11 @@ const styles = theme => ({
 const types = [
   {
     value: 'OWNER',
-    label: 'owner'
+    label: 'Owner'
   },
   {
     value: 'CUSTOMER',
-    label: 'customer'
+    label: 'Customer'
   }
 ];
 class CreateAccount extends Component {

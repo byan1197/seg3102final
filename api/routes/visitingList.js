@@ -49,6 +49,7 @@ router.post('/', (req, res, next) => {
 
             if (results[1].rent > results[0].maxRent) {
                 return res.status(400).json({
+                    err: 'restriction',
                     message: "Cannot add property. Maximum allowed rent is exceeded"
                 });
             }
@@ -82,6 +83,7 @@ router.post('/', (req, res, next) => {
 
                         if (strList.includes(propertyId)) {
                             return res.status(400).json({
+                                error: 'ERR',
                                 message: "property already added to visiting list"
                             });
                         }
@@ -102,20 +104,21 @@ router.post('/', (req, res, next) => {
                     }
                 });
         })
-        .catch(err => res.status(400).json({ message: err }))
+        .catch(err => res.status(400).json({ message: err, error: err }))
 });
 
 router.get('/:userid', (req, res, next) => {
     VisitingList.find({ customerId: req.params.userid })
+        .populate('list')
         .exec((err, docs) => {
             if (docs.length <= 0 || err) {
                 return res.status(400).json({
-                    message: "visiting list does not exist",
+                    message: "Visiting list does not exist.",
                     error: err
                 });
             }
 
-            res.status(200).json(docs[0]);
+            return res.status(200).json(docs[0]);
 
         })
 });
