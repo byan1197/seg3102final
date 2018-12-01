@@ -92,6 +92,10 @@ const Fetcher = {
         //`${config.url}/u/&uid=${localStorage.getItem('uid')}`
         return fetch(config.url + '/u/&uid=' + localStorage.getItem('uid'), {
             method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': localStorage.getItem('token')
+            }
         }).then(res => res.json())
     },
 
@@ -103,7 +107,6 @@ const Fetcher = {
             method: "PATCH",
             body: JSON.stringify(data),
             headers: {
-                'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'token': localStorage.getItem('token')
             }
@@ -200,6 +203,20 @@ const Fetcher = {
                 }
             })
     },
+    getVL: function () {
+        return fetch(config.url + '/vl/' + localStorage.getItem('uid'), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': localStorage.getItem('token')
+            }
+        }).then(res => res.json())
+            .catch(e => {
+                return {
+                    message: e
+                }
+            })
+    }
 }
 
 export default Fetcher

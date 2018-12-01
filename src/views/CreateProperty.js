@@ -44,7 +44,6 @@ class CreateProperty extends Component {
     }
 
     onSubmit = () => {
-        console.log('heu',  this.state.files)
         var base64Arr = [];
         this.state.files.forEach(f => {
             this.getBase64(f, res => {

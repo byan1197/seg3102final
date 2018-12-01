@@ -24,7 +24,7 @@ router.post('/', checkAuth, (req, res, next) => {
         _id: new mongoose.Types.ObjectId(),
         owner: req.body.owner,
         address: req.body.address,
-        isAvailable: req.body.isAvailable,
+        isAvailable: true,
         createdAt: new Date().toString(),
         leasedTo: req.body.leasedTo,
         images: req.body.images,

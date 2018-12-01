@@ -61,6 +61,13 @@ class MenuAppBar extends React.Component {
     this.props.history.push("/login");
   }
 
+  viewAccount = () => {
+    this.handleClose();
+    this.props.history.push("/me");
+  }
+
+  
+
 
   render() {
     const { classes } = this.props;
@@ -111,7 +118,6 @@ class MenuAppBar extends React.Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
                   <MenuItem onClick={this.viewAccount}>My account</MenuItem>
                   <MenuItem style={{color: 'red'}} onClick={()=> this.logout()}>Logout</MenuItem>
                 </Menu>
