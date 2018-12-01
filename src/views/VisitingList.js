@@ -56,7 +56,7 @@ class VistiingList extends Component {
     render() {
 
         const { classes } = this.props;
-
+//test
         console.log('this.state.visitingListItems', this.state.visitingListItems)
 
         return (
