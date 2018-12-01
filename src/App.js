@@ -83,43 +83,22 @@ class App extends Component {
     window.location.href = link
   }
 
-
-
   render() {
     let navBarProps = {
       openDrawer: this.drawerOpen
     }
-
     return (
-      <div>
-
-        <Drawer anchor="left" open={this.state.drawerOpen} onClose={this.drawerClose}>
-          {drawerContents(this.drawerLinking)[localStorage.getItem('type')]}
-        </Drawer>
-
-        <Router>
-          {}
-          {localStorage.getItem('token') ?
-            (
-              <div className='App'>
-                <NavBar {...navBarProps} />
-                <div className="App-Content">
-                  <RouteList />
-                </div>
-              </div>
-            ) :
-            (
-              <div className='App'>
-                <NavBar />
-                <div className="App-Content">
-                  <RouteList />
-                </div>
-              </div>
-            )
-          }
-        </Router>
-
-      </div>
+      <Router>
+        <div className='App'>
+          <Drawer anchor="left" open={this.state.drawerOpen} onClose={this.drawerClose}>
+            {drawerContents(this.drawerLinking)[localStorage.getItem('type')]}
+          </Drawer>
+          <NavBar {...navBarProps} />
+          <div className="App-Content">
+            <RouteList />
+          </div>
+        </div>
+      </Router>
     );
   }
 }

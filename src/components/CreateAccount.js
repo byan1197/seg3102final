@@ -22,6 +22,7 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     width: 200,
+    marginBottom: '-0.5em'
   },
 
   main: {
@@ -111,17 +112,17 @@ class CreateAccount extends Component {
         type: this.state.type
       }).then(res => {
         var newState = {
-          
+
           errorMessage: res.message || null,
           success: res.success || null,
         };
-  
+
         if (res.success)
           newState['toHome'] = true;
         this.setState(newState)
       })
     }
-    
+
 
   }
 
@@ -133,7 +134,7 @@ class CreateAccount extends Component {
     var redirectToHome = this.state.toHome;
 
     if (redirectToHome)
-      return <Redirect to='/Success'></Redirect>
+      return <Redirect push to='/Success'></Redirect>
 
     return (
       <main className={classes.main}>
@@ -152,9 +153,9 @@ class CreateAccount extends Component {
                 successMsg
             }
           </Typography>
-            
+
           <form className={classes.form} onSubmit={e => { e.preventDefault(); this.handleAccountCreation(e) }}>
-        
+
             <Grid container spacing={16} className={classes.gridContainer}>
             <Grid item md={6} className={classes.gridItem}>
                 <FormControl margin="normal" required fullWidth>
@@ -168,6 +169,7 @@ class CreateAccount extends Component {
               <TextField
                 id="account-type"
                 select
+                fullWidth
                 className={classes.textField}
                 value={this.state.type}
                 onChange={this.handleChange('type')}
@@ -218,7 +220,7 @@ class CreateAccount extends Component {
               </Grid>
 
               <Grid item md={6} className={classes.gridItem}>
-            
+
                 <FormControl margin="normal" required fullWidth>
                   <InputLabel htmlFor="password">Confirm Password</InputLabel>
                   <Input name="confirmPassword" type="password" id="confirmPassword" />
@@ -226,7 +228,7 @@ class CreateAccount extends Component {
               </Grid>
 
               {
-                this.state.type == "CUSTOMER" ? 
+                this.state.type == "CUSTOMER" ?
                 <Grid item md={6} className={classes.gridItem}>
                 <FormControl margin="normal" required fullWidth>
                 <InputLabel htmlFor="username">Rent</InputLabel>
@@ -234,7 +236,7 @@ class CreateAccount extends Component {
               </FormControl>
               </Grid> : null
               }
-              
+
 
               <Grid item md={8}>
                 <Button
@@ -252,7 +254,7 @@ class CreateAccount extends Component {
             </Grid>
 
           </form>
-          
+
         </Paper>
       </main>
 
