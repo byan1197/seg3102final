@@ -3,6 +3,7 @@ const router = express.Router();
 const checkAuth = require('../middleware/check_auth');
 const Property = require('../models/property');
 const User = require('../models/user');
+const VisitingList = require('../models/visitingList');
 const mongoose = require('mongoose');
 const config = require('../../config/config.json')['global']
 
@@ -68,9 +69,8 @@ router.get('/ownedby/:uid', checkAuth, (req, res) => {
 
     var uid = req.params.uid;
 
-    console.log(uid)
-
     Property.find({
+        deleted: false
     })
         .populate('owner')
         .exec((err, docs) => {
@@ -81,7 +81,6 @@ router.get('/ownedby/:uid', checkAuth, (req, res) => {
                 })
                 return;
             }
-            console.log('docs,',  docs)
             res.status(200).json(docs);
 
         })
@@ -139,10 +138,10 @@ router.get('/locations', checkAuth, (req, res) => {
         })
 })
 
-router.patch('/del=:pid', checkAuth, (req, res) => {
+router.patch('/del/', checkAuth, (req, res) => {
 
     const where = {
-        _id: req.params.uid
+        _id: req.body.pid
     }
 
     const set = {
@@ -152,12 +151,18 @@ router.patch('/del=:pid', checkAuth, (req, res) => {
     Property.updateOne(where, { $set: set })
         .exec((err, result) => {
             if (err)
-                return res.status(500).json({
-                    error: err
+                return res.status(500).json({error: err})
+
+            VisitingList.updateMany({ list: [req.body.pid] }, { $pullAll: { list: [req.body.pid] } })
+                .exec((err, updateRes) => {
+
+                    if (err)
+                        return res.status(500).json({error: err})
+                    return res.status(200).json({
+                        message: "Successfully deleted property"
+                    })
                 })
-            return res.status(200).json({
-                message: "Successfully deleted property"
-            })
+
         })
 
 })
@@ -168,7 +173,7 @@ router.patch('/:pid', checkAuth, (req, res, next) => {
         _id: req.params.pid
     }
 
-    
+
     Property.updateOne(where, { $set: req.body })
         .exec((err, result) => {
             if (err)

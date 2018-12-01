@@ -230,6 +230,22 @@ const Fetcher = {
                     message: e
                 }
             })
+    },
+    deleteProperty: function (pid) {
+        return fetch(config.url + '/p/del/', {
+            method: 'PATCH',
+            body: JSON.stringify({ pid: pid }),
+            headers: {
+                'Content-Type': 'application/json',
+                'token': localStorage.getItem('token')
+            }
+        }).then(res => res.json())
+            .catch(e => {
+                return {
+                    error: e,
+                    message: e
+                }
+            })
     }
 }
 
