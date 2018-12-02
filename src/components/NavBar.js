@@ -130,8 +130,8 @@ class MenuAppBar extends React.Component {
             Manage
           </h1>
           {
-            localStorage.getItem('type') === 'CUSTOMER' ? <CustomerContent /> :
-            localStorage.getItem('type') === 'OWNER' ? <OwnerContent /> :
+            localStorage.getItem('type') === 'CUSTOMER' ? <CustomerContent toggleDrawer={this.toggleDrawer} /> :
+            localStorage.getItem('type') === 'OWNER' ? <OwnerContent toggleDrawer={this.toggleDrawer} /> :
             <AgentContent toggleDrawer={this.toggleDrawer} />
           }
         </Drawer>
