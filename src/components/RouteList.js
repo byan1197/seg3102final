@@ -18,13 +18,13 @@ const RouteList = () => (
     <PrivateRoute path="/test" component={Test} />
     <PrivateRoute path="/create_account" component={CreateAccount} />
     <PrivateRoute path="/success" component={Success} />
-    <PrivateRoute path="/me" component={Account} />
+    <PrivateRoute path="/myAccount" component={Account} />
     <Route path="/login" component={Login} />
     <PrivateRoute path="/search" component={Search} />
     <PrivateRoute path="/properties" component={Properties} />
-    <PrivateRoute path="/visitinglist" component={VisitingList} />
+    <PrivateRoute path="/visitingList" component={VisitingList} />
     <PrivateRoute path="/create_property" component={CreateProperty} />
-    <PrivateRoute path="/ownerprops" component={OwnerProperties} />
+    <PrivateRoute path="/ownerProperties" component={OwnerProperties} />
   </Switch>
 )
 
