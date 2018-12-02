@@ -55,11 +55,11 @@ class VistiingList extends Component {
             });
     }
 
+
+
     render() {
 
         const { classes } = this.props;
-        //test
-        console.log('this.state.visitingListItems', this.state.visitingListItems)
 
         return (
             <div style={{ width: '100%' }}>
@@ -70,7 +70,8 @@ class VistiingList extends Component {
                             display: 'flex',
                             justifyContent: 'center',
                             alignItems: 'center',
-                            marginTop: '4em'
+                            marginTop: '4em',
+                            position: 'absolute'
                         }}>
                             <div className={classes.details}>
                                 <CardContent>
@@ -84,7 +85,7 @@ class VistiingList extends Component {
                     {
                         this.state.visitingListItems.map((v, i) => (
                             <Card className={classes.ptyCard} >
-                                <CardMedia className={classes.cardImg} image='https://sofriendsofhospice.org/wp-content/uploads/2017/05/014-300x300.jpg' />
+                                <CardMedia className={classes.cardImg} image={v.images[0]} />
                                 <div className={classes.details}>
                                     <CardContent>
                                         <Grid container spacing={0}>
@@ -123,6 +124,7 @@ class VistiingList extends Component {
                                             }>
                                                 <Tooltip title='Remove from visiting list'>
                                                     <Fab
+                                                        onClick={() => this.remove}
                                                         color='primary'
                                                         size='small'>
                                                         <CloseIcon />

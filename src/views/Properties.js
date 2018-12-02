@@ -86,7 +86,7 @@ class Properties extends Component {
                     })
                 else
                     this.setState({
-                        message: res.message,
+                        message: "Successfully added to your visiting list",
                         messageIsError: false
                     })
             })
@@ -142,7 +142,8 @@ class Properties extends Component {
                             <Card style={{
                                 display: 'flex',
                                 justifyContent: 'center',
-                                alignItems: 'center'
+                                alignItems: 'center',
+                                position: 'absolute'
                             }}>
                                 <CardContent>
                                     <Typography style={this.state.messageIsError ? { color: 'red' } : { color: 'green' }}>

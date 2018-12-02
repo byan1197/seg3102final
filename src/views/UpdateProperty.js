@@ -79,7 +79,7 @@ const types = [
     }
 ];
 
-class CreateProperty extends Component {
+class UpdateProperty extends Component {
 
     constructor(props) {
         super(props)
@@ -89,7 +89,18 @@ class CreateProperty extends Component {
             success: null,
             location: 'TORONTO, ON',
             type: 'HOUSE',
-            yo: false
+            yo: false,
+            values: {
+                address: this.props.location.state.address,
+                location: this.props.location.state.location,
+                rent: this.props.location.state.rent,
+                numWashrooms: this.props.location.state.numWashrooms,
+                numBedrooms: this.props.location.state.numBedrooms,
+                numOtherRooms: this.props.location.state.numOtherRooms,
+                images: this.props.location.state.images,
+                type: this.props.location.state.type
+            },
+            _id: this.props.location.state._id,
         }
 
         this.changeState = this.changeState.bind(this);
@@ -111,7 +122,7 @@ class CreateProperty extends Component {
     onDrop(files) {
         // TODO: ERROR CHECKING MAX 5 FILES
 
-        var prevFiles = this.state.files;
+        var prevFiles = this.state.values.images;
 
         if (prevFiles.length === 5)
             return;
@@ -119,9 +130,10 @@ class CreateProperty extends Component {
         prevFiles = prevFiles.concat(files);
         if (prevFiles > 5)
             prevFiles = prevFiles.slice(0, 5);
-        this.setState({
-            files: prevFiles
-        });
+        let newState = { ...this.state.values };
+        newState.images = prevFiles
+        this.setState({ values: newState });
+
     }
 
     onCancel() {
@@ -133,37 +145,49 @@ class CreateProperty extends Component {
     onSubmit = (e) => {
 
         var base64Arr = [];
+        var imgurArr = this.state.values.images.filter(i => typeof (i) === 'string');
+        var fileArr = this.state.values.images.filter(i => typeof (i) === 'object');
+
         var data = {
-            rent: e.target.rent.value,
-            numWashrooms: e.target.washroom.value,
-            numBedrooms: e.target.bedroom.value,
-            numOtherRooms: e.target.otherRooms.value,
-            type: e.target.type.value,
-            location: e.target.location.value,
-            address: e.target.address.value
-
+            rent: this.state.values.rent,
+            numWashrooms: this.state.values.numWashrooms,
+            numBedrooms: this.state.values.numBedrooms,
+            numOtherRooms: this.state.values.numOtherRooms,
+            type: this.state.values.type,
+            location: this.state.values.location,
+            address: this.state.values.address,
+            base64Arr: [],
+            imgurArr: imgurArr,
+            pid: this.state._id
         }
-        this.state.files.forEach(f => {
-            this.getBase64(f, res => {
-                base64Arr.push(res);
-                if (base64Arr.length === 5) {
-                    data.images = base64Arr;
+        var pr = new Promise((resolve, reject) => {
 
+            if (fileArr.length === 0)
+                resolve();
 
-                    Fetcher.addProperty(data, this.changeState)
+            fileArr.forEach(f => {
+                this.getBase64(f, res => {
+                    base64Arr.push(res);
+                    if (base64Arr.length === fileArr.length) {
+                        data.base64Arr = base64Arr;
+                        resolve();
+                    }
 
-
-
-                }
-            })
+                })
+            });
         });
+
+        pr.then((result) => {
+            Fetcher.patchProperty(data, this.changeState);
+        })
     }
     removeFile(i) {
         console.log("here", i);
-        let files = this.state.files;
+        var newState = { ...this.state.values };
+        let files = this.state.values.images;
         files.splice(i, 1);
         console.log(files.length, "inside remove file");
-        this.setState({ files: files });
+        this.setState({ values: newState })
     }
     changeState(status, msg) {
 
@@ -179,18 +203,25 @@ class CreateProperty extends Component {
         }
     }
     handleChange = name => event => {
-        console.log([name]);
         this.setState({
             [name]: event.target.value,
         });
     };
+
+    handleTextInputChange = (e, i, v) => {
+        var newState = { ...this.state.values };
+        newState[e.target.name] = e.target.value
+        console.log(newState)
+        this.setState({ values: newState })
+
+    }
 
     render() {
         const error = this.state.error;
         const successMsg = this.state.success;
         const { classes } = this.props;
 
-        console.log('this.state.files', this.state.files)
+        console.log('this.state', this.state.values)
 
         return (
             <main className={classes.main}>
@@ -200,8 +231,8 @@ class CreateProperty extends Component {
                         <Add />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Add Property
-          </Typography>
+                        Update Property
+                    </Typography>
                     <Typography component="p" variant="b" style={error ? { color: 'red' } : { color: 'green' }}>
                         {
                             error ?
@@ -217,35 +248,35 @@ class CreateProperty extends Component {
                                 <Grid item md={4} className={classes.gridItem}>
                                     <FormControl margin="normal" required fullWidth>
                                         <InputLabel htmlFor="username">Address</InputLabel>
-                                        <Input id="address" name="address" autoFocus />
+                                        <Input id="address" value={this.state.values.address} onChange={this.handleTextInputChange} name="address" autoFocus />
                                     </FormControl>
                                 </Grid>
 
                                 <Grid item md={4} className={classes.gridItem}>
                                     <FormControl margin="normal" required fullWidth>
                                         <InputLabel htmlFor="username">Washrooms</InputLabel>
-                                        <Input type="number" id="washroom" name="washroomNum" autoFocus />
+                                        <Input type="number" value={this.state.values.numWashrooms} onChange={this.handleTextInputChange} id="washroom" name="numWashrooms" autoFocus />
                                     </FormControl>
                                 </Grid>
 
                                 <Grid item md={4} className={classes.gridItem}>
                                     <FormControl margin="normal" required fullWidth>
                                         <InputLabel htmlFor="username">Bedrooms</InputLabel>
-                                        <Input id="bedroom" type="number" name="numBedrooms" autoFocus />
+                                        <Input id="bedroom" value={this.state.values.numBedrooms} onChange={this.handleTextInputChange} type="number" name="numBedrooms" autoFocus />
                                     </FormControl>
                                 </Grid>
 
                                 <Grid item md={4} className={classes.gridItem}>
                                     <FormControl margin="normal" required fullWidth>
                                         <InputLabel htmlFor="username">Other Rooms</InputLabel>
-                                        <Input type="number" id="other" name="otherRooms" autoFocus />
+                                        <Input value={this.state.values.numOtherRooms} onChange={this.handleTextInputChange} type="number" id="other" name="numOtherRooms" autoFocus />
                                     </FormControl>
                                 </Grid>
 
                                 <Grid item md={4} className={classes.gridItem}>
                                     <FormControl margin="normal" required fullWidth>
                                         <InputLabel htmlFor="rent">Rent</InputLabel>
-                                        <Input type="number" id="rent" name="rent" autoFocus />
+                                        <Input value={this.state.values.rent} onChange={this.handleTextInputChange} type="number" id="rent" name="rent" autoFocus />
                                     </FormControl>
                                 </Grid>
 
@@ -304,13 +335,21 @@ class CreateProperty extends Component {
                                 </Grid>
                                 <Grid item md={12} className={classes.gridItem}>
                                     <List>
-                                        {this.state.files.map((f, i) => {
+                                        {this.state.values.images.map((f, i) => {
                                             return <ListItem button key={i}>
                                                 <ListItemAvatar>
-                                                    <Avatar src={URL.createObjectURL(f)} />
+                                                    {
+                                                        typeof (f) === 'string' ?
+                                                            <Avatar src={f} /> :
+                                                            <Avatar src={URL.createObjectURL(f)} />
+                                                    }
                                                 </ListItemAvatar>
                                                 <ListItemText>
-                                                    {f.name}
+                                                    {
+                                                        typeof (f) === 'string' ?
+                                                            f :
+                                                            f.name
+                                                    }
                                                 </ListItemText>
                                                 <ListItemSecondaryAction>
                                                     <IconButton>
@@ -330,8 +369,8 @@ class CreateProperty extends Component {
                                         color="primary"
                                         className={classes.submit}
                                     >
-                                        CREATE PROPERTY
-                </Button>
+                                        UPDATE PROPERTY
+                                    </Button>
 
                                 </Grid>
 
@@ -348,4 +387,4 @@ class CreateProperty extends Component {
     }
 
 }
-export default withStyles(styles)(CreateProperty);
+export default withStyles(styles)(UpdateProperty);

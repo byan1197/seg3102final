@@ -240,7 +240,7 @@ class Search extends Component {
                             }
                         </Button>
 
-                        <Button color="secondary"
+                        <Button
                             style={{ marginTop: '10px' }}
                             fullWidth
                             onClick={this.toggleFields}>

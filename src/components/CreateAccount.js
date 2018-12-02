@@ -78,7 +78,8 @@ class CreateAccount extends Component {
       errorMessage: null,
       success: null,
       toHome: false,
-      type: 'CUSTOMER'
+      type: 'CUSTOMER',
+      
     }
   }
 
@@ -129,7 +130,7 @@ class CreateAccount extends Component {
   render() {
 
     const { classes } = this.props;
-    var error = this.state.errorMessage;
+    var error = this.state.error;
     var successMsg = this.state.success;
     var redirectToHome = this.state.toHome;
 
