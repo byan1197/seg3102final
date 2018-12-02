@@ -5,7 +5,7 @@ import ListIcon from '@material-ui/icons/List';
 import AddIcon from '@material-ui/icons/Add';
 import SearchIcon from '@material-ui/icons/Search';
 import InsertDriveFileicon from '@material-ui/icons/InsertDriveFile';
-import { BrowserRouter as Router, Redirect } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
 import NavBar from './components/NavBar'
 import RouteList from './components/RouteList';
@@ -20,7 +20,7 @@ const drawerContents = redirFn => {
           </ListItemIcon>
           <ListItemText primary="Add A Property" />
         </ListItem>
-        <ListItem button onClick={() => redirFn('/proplist')}>
+        <ListItem button onClick={() => redirFn('/ownerprops')}>
           <ListItemIcon>
             <HomeIcon />
           </ListItemIcon>
@@ -83,43 +83,22 @@ class App extends Component {
     window.location.href = link
   }
 
-
-
   render() {
     let navBarProps = {
       openDrawer: this.drawerOpen
     }
-
     return (
-      <div>
-
-        <Drawer anchor="left" open={this.state.drawerOpen} onClose={this.drawerClose}>
-          {drawerContents(this.drawerLinking)[localStorage.getItem('type')]}
-        </Drawer>
-
-        <Router>
-          {}
-          {localStorage.getItem('token') ?
-            (
-              <div className='App'>
-                <NavBar {...navBarProps} />
-                <div className="App-Content">
-                  <RouteList />
-                </div>
-              </div>
-            ) :
-            (
-              <div className='App'>
-                <NavBar />
-                <div className="App-Content">
-                  <RouteList />
-                </div>
-              </div>
-            )
-          }
-        </Router>
-
-      </div>
+      <Router>
+        <div className='App'>
+          <Drawer anchor="left" open={this.state.drawerOpen} onClose={this.drawerClose}>
+            {drawerContents(this.drawerLinking)[localStorage.getItem('type')]}
+          </Drawer>
+          <NavBar {...navBarProps} />
+          <div className="App-Content">
+            <RouteList />
+          </div>
+        </div>
+      </Router>
     );
   }
 }

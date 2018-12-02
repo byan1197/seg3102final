@@ -4,8 +4,6 @@ import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import Checkbox from '@material-ui/core/Checkbox';
 import Input from '@material-ui/core/Input';
 import InputLabel from '@material-ui/core/InputLabel';
 import LockIcon from '@material-ui/icons/LockOutlined';
@@ -22,6 +20,7 @@ const styles = theme => ({
     marginLeft: theme.spacing.unit,
     marginRight: theme.spacing.unit,
     width: 200,
+    marginBottom: '-0.5em'
   },
 
   main: {
@@ -62,11 +61,11 @@ const styles = theme => ({
 const types = [
   {
     value: 'OWNER',
-    label: 'owner'
+    label: 'Owner'
   },
   {
     value: 'CUSTOMER',
-    label: 'customer'
+    label: 'Customer'
   }
 ];
 class CreateAccount extends Component {
@@ -92,14 +91,14 @@ class CreateAccount extends Component {
 
 
   handleAccountCreation = (e) => {
-    const rent = this.state.type == 'CUSTOMER' ? e.target.rent.value : -1;
+    const rent = this.state.type === 'CUSTOMER' ? e.target.rent.value : -1;
     let error = "";
 
-    if (e.target.confirmPassword.value != e.target.password.value)
+    if (e.target.confirmPassword.value !== e.target.password.value)
       error = error +  " Passwords are not equal."
     if (!(e.target.email.value.includes('@')))
       error = error + " Email is not in the correct form"
-    if (error != "")
+    if (error !== "")
       this.setState({errorMessage : error})
     else{
       Fetcher.createAccount({
@@ -112,17 +111,17 @@ class CreateAccount extends Component {
         type: this.state.type
       }).then(res => {
         var newState = {
-          
+
           errorMessage: res.message || null,
           success: res.success || null,
         };
-  
+
         if (res.success)
           newState['toHome'] = true;
         this.setState(newState)
       })
     }
-    
+
 
   }
 
@@ -134,7 +133,7 @@ class CreateAccount extends Component {
     var redirectToHome = this.state.toHome;
 
     if (redirectToHome)
-      return <Redirect to='/Success'></Redirect>
+      return <Redirect push to='/Success'></Redirect>
 
     return (
       <main className={classes.main}>
@@ -153,9 +152,9 @@ class CreateAccount extends Component {
                 successMsg
             }
           </Typography>
-            
+
           <form className={classes.form} onSubmit={e => { e.preventDefault(); this.handleAccountCreation(e) }}>
-        
+
             <Grid container spacing={16} className={classes.gridContainer}>
             <Grid item md={6} className={classes.gridItem}>
                 <FormControl margin="normal" required fullWidth>
@@ -169,6 +168,7 @@ class CreateAccount extends Component {
               <TextField
                 id="account-type"
                 select
+                fullWidth
                 className={classes.textField}
                 value={this.state.type}
                 onChange={this.handleChange('type')}
@@ -219,7 +219,7 @@ class CreateAccount extends Component {
               </Grid>
 
               <Grid item md={6} className={classes.gridItem}>
-            
+
                 <FormControl margin="normal" required fullWidth>
                   <InputLabel htmlFor="password">Confirm Password</InputLabel>
                   <Input name="confirmPassword" type="password" id="confirmPassword" />
@@ -227,7 +227,7 @@ class CreateAccount extends Component {
               </Grid>
 
               {
-                this.state.type == "CUSTOMER" ? 
+                this.state.type === "CUSTOMER" ?
                 <Grid item md={6} className={classes.gridItem}>
                 <FormControl margin="normal" required fullWidth>
                 <InputLabel htmlFor="username">Rent</InputLabel>
@@ -235,7 +235,7 @@ class CreateAccount extends Component {
               </FormControl>
               </Grid> : null
               }
-              
+
 
               <Grid item md={8}>
                 <Button
@@ -253,7 +253,7 @@ class CreateAccount extends Component {
             </Grid>
 
           </form>
-          
+
         </Paper>
       </main>
 

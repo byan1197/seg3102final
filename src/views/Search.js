@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import classNames from 'classnames';
 import TextField from '@material-ui/core/TextField';
 import Paper from '@material-ui/core/Paper';
 import { withStyles } from '@material-ui/core/styles';
@@ -231,8 +230,7 @@ class Search extends Component {
                         <Button color="primary"
                             style={{ margin: '10px 0px' }}
                             variant="contained"
-                            fullWidth
-                            onClick={e => { e.preventDefault(); this.search() }}
+                            onClick={e => { e.preventDefault(); this.search()}}
                             fullWidth>
                             {
                                 selectedLocation || Object.keys(this.state.values).map(v => typeof (this.state.values[v])).includes('string') ?
@@ -241,9 +239,8 @@ class Search extends Component {
                             }
                         </Button>
 
-                        <Button color="secondary"
+                        <Button
                             style={{ marginTop: '10px' }}
-                            fullWidth
                             onClick={this.toggleFields}
                             fullWidth>
                             {

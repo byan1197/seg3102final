@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Dialog, DialogTitle, Fab, Grid, Typography, DialogContent, Button } from '@material-ui/core';
+import { Card, CardContent, CardMedia, Dialog, DialogTitle, Fab, Tooltip, Grid, Typography, DialogContent, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
@@ -16,6 +16,7 @@ const styles = theme => ({
         alignItems: 'center',
         width: '100%',
         flexDirection: 'column',
+        paddingBottom: '3em',
     },
     ptyCard: {
         margin: '10px',
@@ -54,8 +55,8 @@ class Properties extends Component {
     }
 
     componentDidMount() {
-        // this.props.location.state.properties? 
-        //TODO: HANDLE EMPTY PROPERTY LIST
+        if (this.props.location.state.properties.length === 0)
+            this.setState({ message: 'No Properties Found', messageIsError: true })
     }
 
     handleClose = () => {
@@ -68,8 +69,7 @@ class Properties extends Component {
         this.setState({
             dialogOpen: true,
             selectedProperty: {
-                // images: i,
-                images: ['https://i.imgur.com/u9MEogO.jpg', 'https://i.imgur.com/u9MEogO.jpg', 'https://i.imgur.com/u9MEogO.jpg'],
+                images: i,
                 type: t,
                 address: a
             }
@@ -79,14 +79,14 @@ class Properties extends Component {
     addToVisitingList = pid => {
         Fetcher.postAddToVL(pid)
             .then(res => {
-                if (res.message || res.error)
+                if (res.error || res.err)
                     this.setState({
                         message: res.message,
                         messageIsError: true
                     })
                 else
                     this.setState({
-                        message: "Successfully added",
+                        message: "Successfully added to your visiting list",
                         messageIsError: false
                     })
             })
@@ -128,7 +128,9 @@ class Properties extends Component {
                 </Dialog>
 
                 <Grid container spacing={0} style={{ marginTop: '10px' }}>
-                    <Grid item md={2}>
+                    <Grid item md={1}>
+                    </Grid>
+                    <Grid item md={1}>
                         <Button onClick={this.goToSearch}>
                             <KeyboardBackspaceIcon />
                             Back to Search
@@ -137,10 +139,11 @@ class Properties extends Component {
                     <Grid item md={9}>
                         {
                             this.state.message !== 'NO_MESSAGE' &&
-                            <Card className='rounded' style={{
+                            <Card style={{
                                 display: 'flex',
                                 justifyContent: 'center',
-                                alignItems: 'center'
+                                alignItems: 'center',
+                                position: 'absolute'
                             }}>
                                 <CardContent>
                                     <Typography style={this.state.messageIsError ? { color: 'red' } : { color: 'green' }}>
@@ -156,7 +159,7 @@ class Properties extends Component {
                     {
                         this.state.properties.map((p, i) => (
                             <Card className={classes.ptyCard} >
-                                <CardMedia className={classes.cardImg} image='https://sofriendsofhospice.org/wp-content/uploads/2017/05/014-300x300.jpg' />
+                                <CardMedia className={classes.cardImg} image={p.images[0]} />
                                 <div className={classes.details}>
                                     <CardContent>
                                         <Grid container spacing={0}>
@@ -170,18 +173,18 @@ class Properties extends Component {
                                             </Grid>
                                             <Grid item md={3}>
                                                 <Typography>
-                                                    Rent: ${p.rent}
+                                                    <b>Rent</b>: ${p.rent}
                                                 </Typography>
                                                 <Typography>
-                                                    Bedroom(s): {p.numBedrooms}
+                                                    <b>Bedroom(s)</b>: {p.numBedrooms}
                                                 </Typography>
                                             </Grid>
                                             <Grid item md={3}>
                                                 <Typography>
-                                                    Washroom(s): {p.numWashrooms}
+                                                    <b>Washroom(s)</b>: {p.numWashrooms}
                                                 </Typography>
                                                 <Typography>
-                                                    Other Room(s): {p.numOtherRooms}
+                                                    <b>Other Room(s)</b>: {p.numOtherRooms}
                                                 </Typography>
                                             </Grid>
                                             <Grid item md={3} style={
@@ -193,22 +196,23 @@ class Properties extends Component {
                                                     justifyContent: 'center'
                                                 }
                                             }>
-                                                <Typography>
-                                                    Owner Username: {p.owner.name}
-                                                </Typography>
-                                                <Fab
-                                                    className={classes.actionButton}
-                                                    color='primary'
-                                                    size='small'
-                                                    onClick={() => this.openDialog(p.images, p.type, p.address)}>
-                                                    <CollectionsIcon />
-                                                </Fab>
-                                                <Fab
-                                                    size='small'
-                                                    color='secondary'
-                                                    onClick={() => this.addToVisitingList(p._id)}>
-                                                    <AddIcon />
-                                                </Fab>
+                                                <Tooltip title='View images' >
+                                                    <Fab
+                                                        className={classes.actionButton}
+                                                        color='primary'
+                                                        size='small'
+                                                        onClick={() => this.openDialog(p.images, p.type, p.address)}>
+                                                        <CollectionsIcon />
+                                                    </Fab>
+                                                </Tooltip>
+                                                <Tooltip title='Add to visiting list'>
+                                                    <Fab
+                                                        size='small'
+                                                        color='secondary'
+                                                        onClick={() => this.addToVisitingList(p._id)}>
+                                                        <AddIcon />
+                                                    </Fab>
+                                                </Tooltip>
                                             </Grid>
                                         </Grid>
                                     </CardContent>

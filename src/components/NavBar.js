@@ -16,6 +16,7 @@ import { NavLink, withRouter, Redirect } from 'react-router-dom';
 const styles = {
   root: {
     flexGrow: 1,
+    zIndex: 5
   },
   grow: {
     flexGrow: 1,
@@ -61,6 +62,13 @@ class MenuAppBar extends React.Component {
     this.props.history.push("/login");
   }
 
+  viewAccount = () => {
+    this.handleClose();
+    this.props.history.push("/me");
+  }
+
+  
+
 
   render() {
     const { classes } = this.props;
@@ -84,8 +92,10 @@ class MenuAppBar extends React.Component {
                </IconButton>) :
                <div/>
             }
-            <Typography variant="h6" color="inherit" className={classes.grow}>
-              <NavLink to='/'>OPR</NavLink>
+            <Typography variant="h5" color="default" className={classes.grow}>
+              <NavLink style={{textDecoration: 'none', color: 'white', fontWeight: '100'}} to='/'>
+                OPR System
+              </NavLink>
             </Typography>
             {auth ? (
               <div>
@@ -111,7 +121,6 @@ class MenuAppBar extends React.Component {
                   open={open}
                   onClose={this.handleClose}
                 >
-                  <MenuItem onClick={this.handleClose}>Profile</MenuItem>
                   <MenuItem onClick={this.viewAccount}>My account</MenuItem>
                   <MenuItem style={{color: 'red'}} onClick={()=> this.logout()}>Logout</MenuItem>
                 </Menu>

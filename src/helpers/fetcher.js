@@ -1,5 +1,39 @@
 var config = require('../uiConfig.json')[process.env.NODE_ENV || "development"];
 
+
+const imgurUpload = function(fields){
+    var promiseArr = [];
+    fields.forEach(i => {
+        promiseArr.push(
+            new Promise((resolve, reject) => {
+
+                console.log('Setting up the promise...')
+
+                var data = {
+                    image: i
+                }
+                // fetch('https://api.imgur.com/oauth2/authorize?client_id=' + config.imgur.cId + '&response_type=token')
+                fetch('https://api.imgur.com/3/image', {
+                    method: "POST",
+                    body: JSON.stringify(data.image.substring(data.image.indexOf(',')+1)),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': 'Client-ID ' + config.imgur.clientId
+                    }
+                })
+                    .then(res => res.json())
+                    .then(res => {
+                        console.log('res.data.link', res.data.link)
+                        resolve(res.data.link)
+                    })
+                    .catch(error => reject());
+            })
+        )
+    })
+    return Promise.all(promiseArr)
+}
+
+
 const Fetcher = {
 
     postLogin: function (data) {
@@ -39,10 +73,53 @@ const Fetcher = {
             }
         }).then();
     },
+    patchProperty: function(fields, cb){
+        let imgurLinks = fields.imgurArr;
+        let files = fields.base64Arr;
+        imgurUpload(files)
+            .then((res) =>{
+                imgurLinks = imgurLinks.concat(res.map(x => x));
+                
+                const data = {
+                    address : fields.address,
+                    location: fields.location,
+                    rent: fields.rent,
+                    numWashrooms: fields.numWashrooms,
+                    numBedrooms: fields.numBedrooms,
+                    numOtherRooms: fields.numOtherRooms,
+                    images: imgurLinks,
+                    type: fields.type
+                }
+                return fetch(config.url + "/p/" + fields.pid, {
+                    method: "PATCH",
+                    body: JSON.stringify(data),
+                    headers: {
+                        'Accept': 'application/json',
+                        'Content-Type': 'application/json',
+                        'token': localStorage.getItem('token')
+
+                    }
+                }).then(res => res.json())
+                .then(res => {
+
+                    if (!res.status == '201')
+                        cb('error',"Could not create account");
+    
+                    
+                        else{
+                            cb('success', ("Property successfully created"))
+                        }
+                    
+                })
+                    .catch(e => {
+                        return { error: e }
+                    })
+            })
+    },
     addProperty: function (fields, cb) {
-        var data = {};
+        console.log("hello");
+        // var data = {};
         //images [base64 strings]
-        console.log(fields.images, " imagew")
         var promiseArr = [];
         fields.images.forEach(i => {
             promiseArr.push(
@@ -109,6 +186,10 @@ const Fetcher = {
         //`${config.url}/u/&uid=${localStorage.getItem('uid')}`
         return fetch(config.url + '/u/&uid=' + localStorage.getItem('uid'), {
             method: "GET",
+            headers: {
+                'Content-Type': 'application/json',
+                'token': localStorage.getItem('token')
+            }
         }).then(res => res.json())
     },
 
@@ -120,7 +201,6 @@ const Fetcher = {
             method: "PATCH",
             body: JSON.stringify(data),
             headers: {
-                'Accept': 'application/json',
                 'Content-Type': 'application/json',
                 'token': localStorage.getItem('token')
             }
@@ -217,6 +297,50 @@ const Fetcher = {
                 }
             })
     },
+    getVL: function () {
+        return fetch(config.url + '/vl/' + localStorage.getItem('uid'), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': localStorage.getItem('token')
+            }
+        }).then(res => res.json())
+            .catch(e => {
+                return {
+                    message: e
+                }
+            })
+    },
+    getOwnerProperties: function () {
+        return fetch(config.url + '/p/ownedby/' + localStorage.getItem('uid'), {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'token': localStorage.getItem('token')
+            }
+        }).then(res => res.json())
+            .catch(e => {
+                return {
+                    message: e
+                }
+            })
+    },
+    deleteProperty: function (pid) {
+        return fetch(config.url + '/p/del/', {
+            method: 'PATCH',
+            body: JSON.stringify({ pid: pid }),
+            headers: {
+                'Content-Type': 'application/json',
+                'token': localStorage.getItem('token')
+            }
+        }).then(res => res.json())
+            .catch(e => {
+                return {
+                    error: e,
+                    message: e
+                }
+            })
+    }
 }
 
 export default Fetcher
