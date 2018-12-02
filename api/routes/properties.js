@@ -30,6 +30,7 @@ router.post('/', checkAuth, (req, res, next) => {
         deleted: false,
         rent: req.body.rent,
         numWashrooms: req.body.numWashrooms,
+        isAvailable: true,
         numBedrooms: req.body.numBedrooms,
         numOtherRooms: req.body.numOtherRooms,
         type: req.body.type, //one of : HOUSE, APPARTMENT,
@@ -109,6 +110,9 @@ router.get('/', checkAuth, (req, res) => {
         rentQuery.$gte = parseInt(req.query.minRent)
     if (Object.keys(rentQuery).length > 0)
         where.rent = rentQuery
+
+    console.log('where', where)
+
     Property.find(where)
         .populate('owner')
         .exec((err, docs) => {
@@ -148,13 +152,13 @@ router.patch('/del/', checkAuth, (req, res) => {
     Property.updateOne(where, { $set: set })
         .exec((err, result) => {
             if (err)
-                return res.status(500).json({error: err})
+                return res.status(500).json({ error: err })
 
             VisitingList.updateMany({ list: [req.body.pid] }, { $pullAll: { list: [req.body.pid] } })
                 .exec((err, updateRes) => {
 
                     if (err)
-                        return res.status(500).json({error: err})
+                        return res.status(500).json({ error: err })
                     return res.status(200).json({
                         message: "Successfully deleted property"
                     })

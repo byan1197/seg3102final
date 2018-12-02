@@ -10,6 +10,7 @@ const propertySchema = mongoose.Schema({
     numWashrooms: { type: Number, require: true },
     numBedrooms: { type: Number, require: true },
     numOtherRooms: { type: Number, require: true },
+    isAvailable: { type: Boolean, require: true },
     type: { type: String, require: true }, //one of : HOUSE, APPARTMENT
     rent: { type: Number, require: true },
     location: { type: String, required: true},
