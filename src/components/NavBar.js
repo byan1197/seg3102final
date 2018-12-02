@@ -12,6 +12,8 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { NavLink, withRouter, Redirect } from 'react-router-dom';
+import { AgentContent, CustomerContent, OwnerContent } from './DrawerContent'
+import { Drawer } from '@material-ui/core/'
 
 const styles = {
   root: {
@@ -28,47 +30,45 @@ const styles = {
 };
 
 class MenuAppBar extends React.Component {
-
   constructor(props) {
     super(props);
     this.state = {
       anchorEl: null,
       toHome: false,
       user: localStorage.getItem('type'),
-      toAccount: false
+      toAccount: false,
+      isDrawerOpen: false
     }
 
     this.handleMenu = this.handleMenu.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.logout = this.logout.bind(this);
+    this.viewAccount = this.viewAccount.bind(this);
+    this.toggleDrawer = this.toggleDrawer.bind(this);
   }
 
   // componentDidMount(){
   //   this.setState({user : localStorage.getItem('type')})
   // }
 
-
   handleMenu = event => {
     this.setState({ anchorEl: event.currentTarget });
-  };
-
-  handleClose = () => {
+  }
+  handleClose(){
     this.setState({ anchorEl: null });
-  };
-
-  logout = () => {
+  }
+  logout(){
     this.handleClose();
     localStorage.clear();
     this.props.history.push("/login");
   }
-
-  viewAccount = () => {
+  viewAccount(){
     this.handleClose();
-    this.props.history.push("/me");
+    this.props.history.push("/myAccount");
   }
-
-  
-
+  toggleDrawer(){
+    this.setState({ isDrawerOpen: !this.state.isDrawerOpen });
+  }
 
   render() {
     const { classes } = this.props;
@@ -76,18 +76,15 @@ class MenuAppBar extends React.Component {
     const auth = localStorage.getItem('uid') && localStorage.getItem("token")
     const open = Boolean(anchorEl);
 
-
-   
     if (this.state.toAccount)
-      return <Redirect push to='/me'></Redirect>
+      return <Redirect push to='/myAccount'/>
 
     return (
-      
       <div className={classes.root}>
         <AppBar color="primary" position="fixed">
           <Toolbar>
             {auth ?
-              (<IconButton onClick={this.props.openDrawer} className={classes.menuButton} color="inherit" aria-label="Menu">
+              (<IconButton onClick={this.toggleDrawer} className={classes.menuButton} color="inherit" aria-label="Menu">
                 <MenuIcon />
                </IconButton>) :
                <div/>
@@ -122,12 +119,22 @@ class MenuAppBar extends React.Component {
                   onClose={this.handleClose}
                 >
                   <MenuItem onClick={this.viewAccount}>My account</MenuItem>
-                  <MenuItem style={{color: 'red'}} onClick={()=> this.logout()}>Logout</MenuItem>
+                  <MenuItem style={{color: 'red'}} onClick={this.logout}>Logout</MenuItem>
                 </Menu>
               </div>
             ) : <div/>}
           </Toolbar>
         </AppBar>
+        <Drawer anchor="left" open={this.state.isDrawerOpen} onClose={this.toggleDrawer}>
+          <h1 style={{fontWeight: '100', marginLeft: '0.8em', width: 'fit-content'}}>
+            Manage
+          </h1>
+          {
+            localStorage.getItem('type') === 'CUSTOMER' ? <CustomerContent /> :
+            localStorage.getItem('type') === 'OWNER' ? <OwnerContent /> :
+            <AgentContent toggleDrawer={this.toggleDrawer} />
+          }
+        </Drawer>
       </div>
     );
   }
@@ -136,5 +143,5 @@ class MenuAppBar extends React.Component {
 MenuAppBar.propTypes = {
   classes: PropTypes.object.isRequired,
 };
-
+// DrawerContent(this.drawerLinking)[localStorage.getItem('type')]
 export default withStyles(styles)(withRouter(MenuAppBar));
