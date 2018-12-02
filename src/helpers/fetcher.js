@@ -79,7 +79,7 @@ const Fetcher = {
         imgurUpload(files)
             .then((res) =>{
                 imgurLinks = imgurLinks.concat(res.map(x => x));
-                
+
                 const data = {
                     address : fields.address,
                     location: fields.location,
@@ -102,14 +102,14 @@ const Fetcher = {
                 }).then(res => res.json())
                 .then(res => {
 
-                    if (!res.status == '201')
+                    if (!res.status(201))
                         cb('error',"Could not create account");
-    
-                    
+
+
                         else{
                             cb('success', ("Property successfully created"))
                         }
-                    
+
                 })
                     .catch(e => {
                         return { error: e }
@@ -145,13 +145,13 @@ const Fetcher = {
                 })
             )
         })
-          
+
 
         Promise.all(promiseArr)
             .then((results) => {
                 fields.images = results;
                 console.log(fields);
-            
+
                 return fetch(config.url + "/p", {
                     method: "POST",
                     body: JSON.stringify(fields),
@@ -164,17 +164,19 @@ const Fetcher = {
                 }).then(res => res.json())
                 .then(res => {
 
-                    if (!res.status == '201')
-                        cb('error',"Could not create account");
-    
-                    
-                        else{
-                            cb('success', ("Property successfully created"))
-                        }
-                    
+                    console.log(res)
+                    console.log(res)
+
+                    if (!res.status(201))
+                        cb('error',"Could not create property");
+
+                    else{
+                        cb('success', ("Property successfully created"))
+                    }
+
                 })
                     .catch(e => {
-                        return { error: e }
+                        return cb('Error, could not create property')
                     })
 
 

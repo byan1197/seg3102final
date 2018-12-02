@@ -191,7 +191,7 @@ class UpdateProperty extends Component {
     }
     changeState(status, msg) {
 
-        if (status == 'success') {
+        if (status === 'success') {
             console.log("status", status, msg);
             this.setState({
                 success: msg,

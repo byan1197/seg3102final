@@ -14,7 +14,7 @@ const CarouselWrapper = styled.div`
   width: 100%;
 `;
 const ImgTint = styled.div`
-  background-color: rgba(211,211,211,1);
+  background-color: rgba(233,233,233,1);
   background-blend-mode: multiply;
 `;
 const SlideImg = styled.img`
@@ -26,7 +26,8 @@ const HomeHeader = styled.div`
   width: fit-content;
   left: 4em;
   top: 5.5em;
-  background-color: rgba(0,0,0,.4);
+  background-color: rgba(0,0,0,.6);
+  box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
   background-blend-mode: multiply;
   border-radius: 10em;
 `;

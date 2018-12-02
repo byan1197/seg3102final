@@ -148,12 +148,8 @@ class CreateProperty extends Component {
                 base64Arr.push(res);
                 if (base64Arr.length === 5) {
                     data.images = base64Arr;
-
-
+                    console.log('about to make request')
                     Fetcher.addProperty(data, this.changeState)
-
-
-
                 }
             })
         });
@@ -167,7 +163,7 @@ class CreateProperty extends Component {
     }
     changeState(status, msg) {
 
-        if (status == 'success') {
+        if (status === 'success') {
             console.log("status", status, msg);
             this.setState({
                 success: msg,
