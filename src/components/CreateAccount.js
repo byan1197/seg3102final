@@ -89,6 +89,8 @@ class CreateAccount extends Component {
       type: 'CUSTOMER',
 
     }
+
+    this.onCancel = this.onCancel.bind(this);
   }
 
   handleChange = name => event => {

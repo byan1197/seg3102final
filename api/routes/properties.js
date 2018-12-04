@@ -188,6 +188,51 @@ router.patch('/:pid', checkAuth, (req, res, next) => {
 
 })
 
+router.post('/test/', (req, res, next) => {
+  var imgur = [
+    "https://i.imgur.com/1S6QQj7.jpg",
+    "https://i.imgur.com/SUk3FQK.jpg",
+    "https://i.imgur.com/pP1a1xT.jpg",
+    "https://i.imgur.com/PydX2sh.jpg",
+    "https://i.imgur.com/1JsS7n9.jpg"
+  ];
+var promiseArr = [];
+
+for (var i = 0; i < 50; i++){
+
+  promiseArr.push(new Promise((resolve, reject) => {
+    const imgurCutOff = Math.round(Math.random() * 5);
+    const property = new Property({
+        _id: new mongoose.Types.ObjectId(),
+        owner: req.body.owner,
+        address: i.toString()  + ' Random Street',
+        createdAt: new Date().toString(),
+        images: imgur.slice(Math.random(imgurCutOff, imgur.length)).concat(imgur.slice(0, imgurCutOff)),
+        deleted: false,
+        rent: Math.floor(Math.random() * 5000),
+        numWashrooms: Math.floor(Math.random() * 10),
+        isAvailable: true,
+        numBedrooms: Math.floor(Math.random() * 10),
+        numOtherRooms: Math.floor(Math.random() * 10),
+        type: (['HOUSE', 'APPARTMENT'])[Math.round(Math.random())], //one of : HOUSE, APPARTMENT,
+        location: (['TORONTO, ON', 'MONTREAL, QC', 'OTTAWA, ON'])[Math.round(Math.random() * 2)]
+    });
+
+    property.save()
+    .then(result => {
+      resolve()
+    })
+    .catch(err => {
+        reject()
+    });
+  }))
+
+  Promise.all(promiseArr).then(
+    (x) => {res.send(201).json({message: 'Success'})}
+  )
+ }
+})
+
 
 
 module.exports = router;

@@ -40,7 +40,8 @@ class OwnerProperties extends Component {
         this.state = {
             message: 'NO_MESSAGE',
             properties: [],
-            numVisible: 4,
+            startCursor: 0,
+            numVisible: 25,
             messageType: '',
             toUpdatePage: false,
             propertyToUpdate: null
@@ -48,6 +49,7 @@ class OwnerProperties extends Component {
 
     this.refreshProperties = this.refreshProperties.bind(this);
     this.onLoadMore = this.onLoadMore.bind(this);
+    this.onLoadLess = this.onLoadLess.bind(this);
     }
 
     componentDidMount() {
@@ -99,14 +101,21 @@ class OwnerProperties extends Component {
     updateProperty(p) {
         this.setState({ toUpdatePage: true, propertyToUpdate: p })
     }
-    // onLoadMore(){
-    //   this.setState((prevState) => {
-    //     return {numVisible: prevState.numVisible + 5};
-    //   });
-    // }
     onLoadMore(){
-      this.setState({ numVisible: this.state.numVisible + 5 });
+      this.setState({
+        startCursor: this.state.startCursor + 25,
+        numVisible: this.state.numVisible + 25
+      });
     }
+    onLoadLess(){
+      this.setState({
+        startCursor: this.state.startCursor - 25,
+        numVisible: this.state.numVisible - 25
+      });
+    }
+    // onLoadMore(){
+    //   this.setState({ numVisible: this.state.numVisible + 5 });
+    // }
 
     render() {
         const { classes } = this.props;
@@ -118,12 +127,16 @@ class OwnerProperties extends Component {
           }} />
 
         return (
-            <div style={{ width: '100%' }}>
+            <div style={{
+              width: '100%',
+              height: '200em',
+              background: 'linear-gradient(to right, #0f2027, #203a43, #2c5364)'
+            }}>
                 <div className={classes.container}>
 
                     <Grid container spacing={0} style={{ marginTop: '1.5em', marginBottom: '1.5em', width: '100%', justifyContent: 'center' }}>
                         <Grid item md={3}>
-                          <Typography variant='h3' style={{fontWeight: '100', marginLeft: '-3.3em'}}>
+                          <Typography variant='h3' style={{fontWeight: '100', marginLeft: '-3.3em', color: '#fff'}}>
                             Owned Properties
                           </Typography>
                         </Grid>
@@ -150,7 +163,7 @@ class OwnerProperties extends Component {
                         </Grid>
                     </Grid>
 
-                    { this.state.properties.slice(0, this.state.numVisible).map((p, i) => (
+                    { this.state.properties.slice(this.state.startCursor, this.state.numVisible).map((p, i) => (
                             <Card key={i} className={classes.ptyCard} >
                                 <CardMedia className={classes.cardImg} image={p.images[0]} />
                                 <div className={classes.details}>
@@ -216,10 +229,34 @@ class OwnerProperties extends Component {
                             </Card>
                       ))
                     }
-                    {(this.state.numVisible >= this.state.properties.length) ?
-                      <div style={{ marginTop: '1.5em'}}></div> : <Button style={{ marginTop: '1.5em', marginBottom: '1.5em', color: 'grey' }} type='button' onClick={this.onLoadMore}>Load more</Button>
-                    }
-
+                    <Grid container spacing={0} style={{}}>
+                      <Grid item md={12} style={{ display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                        {/*{
+                          this.state.startCursor > 1 ?
+                          <Button style={{ marginTop: '1.5em', marginBottom: '1.5em', color: 'grey' }} type='button' onClick={this.onLoadLess}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/></svg>
+                          </Button> : <div style={{ marginTop: '1.5em'}}></div>
+                        }*/}
+                        <Button disabled={!(this.state.startCursor > 1)} style={{ marginTop: '1.5em', marginBottom: '1.5em', marginRight: '1.5em', color: 'grey' }} type='button' onClick={this.onLoadLess}>
+                          <p style={!(this.state.startCursor > 1) ? {color: 'grey'} : {color: '#fff'} }>Prev</p>
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="#000" width="24" height="24" viewBox="0 0 24 24"><path d="M15.41 16.09l-4.58-4.59 4.58-4.59L14 5.5l-6 6 6 6z"/></svg>
+                        </Button>
+                        <p style={{color: 'green'}}>
+                          {this.state.startCursor+1} - {this.state.numVisible} of {this.state.properties.length}
+                        </p>
+                        {/*{(this.state.numVisible >= this.state.properties.length) ?
+                          <div style={{ marginTop: '1.5em'}}></div> :
+                          <Button style={{ marginTop: '1.5em', marginBottom: '1.5em', marginLeft: '1.5em', color: 'grey' }} type='button' onClick={this.onLoadMore}>
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="#000" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/></svg>
+                            <p style={(this.state.numVisible >= this.state.properties.length) ? {color: 'grey'} : {color: 'blue'} }>Next</p>
+                          </Button>
+                        }*/}
+                        <Button disabled={this.state.numVisible >= this.state.properties.length} style={{ marginTop: '1.5em', marginBottom: '1.5em', marginLeft: '1.5em', color: 'grey' }} type='button' onClick={this.onLoadMore}>
+                          <svg xmlns="http://www.w3.org/2000/svg" fill="#000" width="24" height="24" viewBox="0 0 24 24"><path d="M8.59 16.34l4.58-4.59-4.58-4.59L10 5.75l6 6-6 6z"/></svg>
+                          <p style={(this.state.numVisible >= this.state.properties.length) ? {color: 'grey'} : {color: '#fff'} }>Next</p>
+                        </Button>
+                      </Grid>
+                    </Grid>
                 </div>
             </div>
         )

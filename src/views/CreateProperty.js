@@ -32,7 +32,7 @@ const styles = theme => ({
     },
 
     main: {
-        height: '100%',
+        height: '96%',
         width: 'auto',
         display: 'block', // Fix IE 11 issue.
         marginLeft: theme.spacing.unit * 3,
@@ -203,10 +203,9 @@ class CreateProperty extends Component {
         return (
           <div style={{
             width: '100%',
-            height: '100vh',
-            backgroundImage: 'url("https://i.imgur.com/mZw0ElZ.png")',
-            backgroundSize: 'cover',
-            backgroundRepeat: 'repeat-y'}}>
+            height: '135%',
+            background: 'linear-gradient(to right, #0f2027, #203a43, #2c5364)'
+          }}>
             <main className={classes.main}>
                 <CssBaseline />
                 <Paper className={classes.paper}>
