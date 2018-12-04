@@ -12,7 +12,7 @@ const styles = theme => ({
         alignItems: 'center',
         width: '100%',
         flexDirection: 'column',
-        marginTop: '4em',
+        marginTop: '1.5em',
         height: 'calc(100%-4em)'
     },
     ptyCard: {
@@ -62,8 +62,15 @@ class VistiingList extends Component {
         const { classes } = this.props;
 
         return (
-            <div style={{ width: '100%' }}>
+            <div style={{
+              width: '100%',
+              background: 'linear-gradient(to right, #3a1c71, #d76d77, #ffaf7b)'}}>
                 <div className={classes.container}>
+                  <Grid item md={3}>
+                    <Typography variant='h3' style={{fontWeight: '100', marginLeft: '-12em', marginBottom: '0.5em', color: 'white'}}>
+                      My Visiting List
+                    </Typography>
+                  </Grid>
                     {
                         this.state.visitingListItems.length === 0 &&
                         <Card style={{
@@ -84,7 +91,7 @@ class VistiingList extends Component {
                     }
                     {
                         this.state.visitingListItems.map((v, i) => (
-                            <Card className={classes.ptyCard} >
+                            <Card key={i} className={classes.ptyCard} >
                                 <CardMedia className={classes.cardImg} image={v.images[0]} />
                                 <div className={classes.details}>
                                     <CardContent>

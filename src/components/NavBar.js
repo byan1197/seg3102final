@@ -13,7 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { NavLink, withRouter, Redirect } from 'react-router-dom';
 import { AgentContent, CustomerContent, OwnerContent } from './DrawerContent'
-import { Drawer } from '@material-ui/core/'
+import { Drawer, Divider } from '@material-ui/core/'
 
 const styles = {
   root: {
@@ -129,6 +129,7 @@ class MenuAppBar extends React.Component {
           <h1 style={{fontWeight: '100', marginLeft: '0.8em', width: 'fit-content'}}>
             Manage
           </h1>
+          <Divider />
           {
             localStorage.getItem('type') === 'CUSTOMER' ? <CustomerContent toggleDrawer={this.toggleDrawer} /> :
             localStorage.getItem('type') === 'OWNER' ? <OwnerContent toggleDrawer={this.toggleDrawer} /> :

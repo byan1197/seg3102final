@@ -162,7 +162,6 @@ class CreateProperty extends Component {
         this.setState({ files: files });
     }
     changeState(status, msg) {
-
         if (status === 'success') {
             console.log("status", status, msg);
             this.setState({
@@ -198,7 +197,7 @@ class CreateProperty extends Component {
                     <Typography component="h1" variant="h5">
                         Add Property
           </Typography>
-                    <Typography component="p" variant="b" style={error ? { color: 'red' } : { color: 'green' }}>
+                    <Typography component="p" variant="h5" style={error ? { color: 'red' } : { color: 'green' }}>
                         {
                             error ?
                                 error :
@@ -327,7 +326,7 @@ class CreateProperty extends Component {
                                         className={classes.submit}
                                     >
                                         CREATE PROPERTY
-                </Button>
+                                    </Button>
 
                                 </Grid>
 

@@ -14,8 +14,8 @@ const CarouselWrapper = styled.div`
   width: 100%;
 `;
 const ImgTint = styled.div`
-  background-color: rgba(233,233,233,1);
-  background-blend-mode: multiply;
+  /* background-color: rgba(233,233,233,1); */
+  /* background-blend-mode: multiply; */
 `;
 const SlideImg = styled.img`
   width: 100%;
@@ -71,7 +71,7 @@ class Home extends Component {
           </Carousel>
         </CarouselWrapper>
         <HomeHeader>
-          <Header>Welcome to OnPropRentals !</Header>
+          <Header>Welcome to Online Property Rentals !</Header>
         </HomeHeader>
         {/*<Link to='/test'>Go to Test page</Link>*/}
       </HomeWrapper>

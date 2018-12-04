@@ -44,7 +44,7 @@ const styles = theme => ({
     marginTop: theme.spacing.unit,
   },
   submit: {
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing.unit * 5,
   },
 });
 
@@ -54,6 +54,7 @@ class Login extends Component {
     super(props);
     this.state = {
       errorMessage: null,
+      error: false,
       success: null,
       toHome: false
     }
@@ -66,22 +67,18 @@ class Login extends Component {
       username: e.target.username.value,
       password: e.target.password.value
     }).then(res => {
-      var newState = {
-        errorMessage: res.message || null,
-        success: res.success || null,
-      };
-      if (res.success){
-        newState['toHome'] = true;
+      if (res.message){
+        this.setState({ error: true, errorMessage: res.message});
+      } else {
+        this.setState({ success: "login success"});
+        this.props.history.push("/");
       }
-      this.setState(newState);
-      this.props.history.push("/");
     })
   }
 
   render() {
     const { classes } = this.props;
-    var error = this.state.errorMessage;
-    var successMsg = this.state.success;
+    const error = this.state.error;
 
     if (localStorage.getItem('token'))
       return <Redirect push to="/"/>
@@ -96,13 +93,11 @@ class Login extends Component {
           <Typography component="h1" variant="h5">
             Login
           </Typography>
-          <Typography component="p" variant="body1" style={error ? { color: 'red' } : { color: 'green' }}>
-            {
-              error ?
-                error :
-                successMsg
-            }
-          </Typography>
+          { error ?
+            <Typography component="p" variant="body1" style={{ color: 'red' }}>
+              {this.state.errorMessage}
+            </Typography> : <div/>
+          }
            <form className={classes.form} onSubmit={e => { e.preventDefault(); this.handleLogin(e) }}>
              <FormControl margin="normal" required fullWidth>
                <InputLabel htmlFor="username">Username</InputLabel>
@@ -113,20 +108,21 @@ class Login extends Component {
                <Input name="password" type="password" id="password" autoComplete="current-password" />
              </FormControl>
              <Button
-               type="submit"
-               fullWidth
+              type="submit"
               margin='normal'
+              fullWidth
               variant="contained"
               color="primary"
+              size="large"
               className={classes.submit}
-            >
+             >
               LOGIN
-            </Button>
-            <Button
+             </Button>
+            {/*<Button
               fullWidth
               margin='normal'
               variant="contained"
-              color="secondary"> Setup an account with an agent</Button>
+              color="secondary"> Setup an account with an agent</Button>*/}
           </form>
         </Paper>
        </main>

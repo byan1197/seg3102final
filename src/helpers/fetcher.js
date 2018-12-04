@@ -60,7 +60,7 @@ const Fetcher = {
             .catch(e => {
                 console.log(e)
                 localStorage.clear();
-                return { message: "Error: invalid credentials" }
+                return { message: "Error: Invalid Credentials" }
             })
 
     },
@@ -165,7 +165,7 @@ const Fetcher = {
                 .then(res => {
 
                     console.log(res)
-                    console.log(res)
+                    console.log(res.status)
 
                     if (!res.status(201))
                         cb('error',"Could not create property");

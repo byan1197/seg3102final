@@ -131,11 +131,20 @@ class Properties extends Component {
                     <Grid item md={1}>
                     </Grid>
                     <Grid item md={1}>
-                        <Button onClick={this.goToSearch}>
+                        <Button style={{
+                          width: '12em',
+                          textAlign: 'right',
+                          marginLeft: '1.4em',
+                          marginTop: '0.5em',
+                          border: '1px solid #003366'}}
+                          onClick={this.goToSearch}>
                             <KeyboardBackspaceIcon />
-                            Back to Search
+                            Search Properties
                         </Button>
                     </Grid>
+                      <Typography variant='h3' style={{fontWeight: '100', marginLeft: '-2.1em', marginTop: '1.7em'}}>
+                        Search Results:
+                      </Typography>
                     <Grid item md={9}>
                         {
                             this.state.message !== 'NO_MESSAGE' &&

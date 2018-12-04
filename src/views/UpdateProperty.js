@@ -233,7 +233,7 @@ class UpdateProperty extends Component {
                     <Typography component="h1" variant="h5">
                         Update Property
                     </Typography>
-                    <Typography component="p" variant="b" style={error ? { color: 'red' } : { color: 'green' }}>
+                    <Typography component="p" variant="h4" style={error ? { color: 'red' } : { color: 'green' }}>
                         {
                             error ?
                                 error :

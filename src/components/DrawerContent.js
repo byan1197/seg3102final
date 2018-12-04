@@ -27,7 +27,7 @@ class OwnerContent extends Component {
             <ListItemIcon>
               <HomeIcon />
             </ListItemIcon>
-            <ListItemText primary="My Owned Listed Properties" />
+            <ListItemText primary="My Listed Properties" />
           </ListItem>
         </NavLink>
       </List>
