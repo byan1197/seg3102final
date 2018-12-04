@@ -17,6 +17,7 @@ import TextField from '@material-ui/core/TextField';
 import MenuItem from '@material-ui/core/MenuItem';
 import { Redirect } from 'react-router-dom';
 import { Grid } from '@material-ui/core';
+
 const styles = theme => ({
   textField: {
     marginLeft: theme.spacing.unit,
@@ -26,8 +27,9 @@ const styles = theme => ({
   },
 
   main: {
-    height: '100vh',
+    height: '100%',
     width: 'auto',
+    overflowY: 'hidden',
     display: 'block', // Fix IE 11 issue.
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
@@ -43,6 +45,12 @@ const styles = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+  },
+  submit: {
+      textTransform: 'none',
+      fontSize: '1em',
+      marginLeft: '1em',
+      width: '45%'
   },
   avatar: {
     margin: theme.spacing.unit,
@@ -70,8 +78,8 @@ const types = [
     label: 'Customer'
   }
 ];
-class CreateAccount extends Component {
 
+class CreateAccount extends Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -79,18 +87,15 @@ class CreateAccount extends Component {
       success: null,
       toHome: false,
       type: 'CUSTOMER',
-      
+
     }
   }
-
 
   handleChange = name => event => {
     this.setState({
       [name]: event.target.value,
     });
   };
-
-
 
   handleAccountCreation = (e) => {
     const rent = this.state.type === 'CUSTOMER' ? e.target.rent.value : -1;
@@ -123,19 +128,23 @@ class CreateAccount extends Component {
         this.setState(newState)
       })
     }
+  }
 
-
+  onCancel(){
+    this.props.history.goBack();
   }
 
   render() {
-
     const { classes } = this.props;
     var error = this.state.error;
     var successMsg = this.state.success;
     var redirectToHome = this.state.toHome;
 
     if (redirectToHome)
-      return <Redirect push to='/Success'></Redirect>
+      return <Redirect push to={{
+        pathname: '/Success',
+        state: { successMsg: "Account has been Created!" }
+      }} />
 
     return (
       <main className={classes.main}>
@@ -156,40 +165,35 @@ class CreateAccount extends Component {
           </Typography>
 
           <form className={classes.form} onSubmit={e => { e.preventDefault(); this.handleAccountCreation(e) }}>
-
             <Grid container spacing={16} className={classes.gridContainer}>
-            <Grid item md={6} className={classes.gridItem}>
-                <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="username">Username</InputLabel>
-                <Input id="username" name="username" autoFocus />
-              </FormControl>
-              </Grid>
-
-
               <Grid item md={6} className={classes.gridItem}>
-              <TextField
-                id="account-type"
-                select
-                fullWidth
-                className={classes.textField}
-                value={this.state.type}
-                onChange={this.handleChange('type')}
-                SelectProps={{
-                  MenuProps: {
-                    className: classes.menu,
-                  },
-                }}
-                margin="normal"
-              >
-                {types.map(option => (
-                  <MenuItem key={option.value} value={option.value}>
-                    {option.label}
-                  </MenuItem>
-                ))}
-               </TextField>
-
+                <FormControl margin="normal" required fullWidth>
+                  <InputLabel htmlFor="username">Username</InputLabel>
+                  <Input id="username" name="username" autoFocus />
+                </FormControl>
               </Grid>
-
+              <Grid item md={6} className={classes.gridItem}>
+                <TextField
+                  id="account-type"
+                  select
+                  fullWidth
+                  className={classes.textField}
+                  value={this.state.type}
+                  onChange={this.handleChange('type')}
+                  SelectProps={{
+                    MenuProps: {
+                      className: classes.menu,
+                    },
+                  }}
+                  margin="normal"
+                >
+                  {types.map(option => (
+                    <MenuItem key={option.value} value={option.value}>
+                      {option.label}
+                    </MenuItem>
+                  ))}
+                </TextField>
+              </Grid>
 
               <Grid item md={6} className={classes.gridItem}>
                 <FormControl margin="normal" required fullWidth>
@@ -212,55 +216,54 @@ class CreateAccount extends Component {
               </FormControl>
               </Grid>
 
-
               <Grid item md={6} className={classes.gridItem}>
                 <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="password">Password</InputLabel>
-                <Input name="password" type="password" id="password" autoComplete="current-password" />
-            </FormControl>
+                  <InputLabel htmlFor="password">Password</InputLabel>
+                  <Input name="password" type="password" id="password" autoComplete="current-password" />
+                </FormControl>
               </Grid>
 
               <Grid item md={6} className={classes.gridItem}>
-
                 <FormControl margin="normal" required fullWidth>
                   <InputLabel htmlFor="password">Confirm Password</InputLabel>
                   <Input name="confirmPassword" type="password" id="confirmPassword" />
                 </FormControl>
               </Grid>
-
               {
                 this.state.type === "CUSTOMER" ?
                 <Grid item md={6} className={classes.gridItem}>
-                <FormControl margin="normal" required fullWidth>
-                <InputLabel htmlFor="username">Rent</InputLabel>
-                <Input id="rent" name="rent" autoFocus />
-              </FormControl>
-              </Grid> : null
+                  <FormControl margin="normal" required fullWidth>
+                    <InputLabel htmlFor="username">Rent</InputLabel>
+                    <Input id="rent" name="rent" autoFocus />
+                  </FormControl>
+                </Grid> : null
               }
-
-
-              <Grid item md={8}>
+              <Grid style={{ marginTop: '1em' }} item md={8}>
+                <Button
+                    type="button"
+                    onClick={this.onCancel}
+                    margin='normal'
+                    variant="contained"
+                    color="secondary"
+                    className={classes.submit}
+                >
+                    Cancel
+                </Button>
                 <Button
                   type="submit"
-                  fullWidth
                   margin='normal'
                   variant="contained"
                   color="primary"
                   className={classes.submit}
                 >
-                  CREATE ACCOUNT
+                  Create Account
                 </Button>
               </Grid>
-
             </Grid>
-
           </form>
-
         </Paper>
       </main>
-
     )
-
   }
 }
 

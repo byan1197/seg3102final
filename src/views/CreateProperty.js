@@ -1,30 +1,38 @@
-
-import Dropzone from 'react-dropzone';
-import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Button, ListItemAvatar, Avatar } from '@material-ui/core/';
-import CloseIcon from '@material-ui/icons/Close';
 import React, { Component } from 'react';
-import CssBaseline from '@material-ui/core/CssBaseline';
-import FormControl from '@material-ui/core/FormControl';
-import Input from '@material-ui/core/Input';
-import InputLabel from '@material-ui/core/InputLabel';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
+import Dropzone from 'react-dropzone';
+import {
+  List,
+  ListItem,
+  ListItemText,
+  ListItemSecondaryAction,
+  IconButton,
+  Button,
+  ListItemAvatar,
+  Avatar,
+  CssBaseline,
+  FormControl,
+  Input,
+  InputLabel,
+  Paper,
+  Typography,
+  TextField,
+  MenuItem,
+  Grid } from '@material-ui/core/';
+import CloseIcon from '@material-ui/icons/Close';
 import withStyles from '@material-ui/core/styles/withStyles';
 import Fetcher from '../helpers/fetcher';
-import TextField from '@material-ui/core/TextField';
-import MenuItem from '@material-ui/core/MenuItem';
-import { Grid } from '@material-ui/core';
 import { Add } from '@material-ui/icons';
+import { Redirect } from 'react-router-dom'
 
 const styles = theme => ({
     textField: {
         marginLeft: theme.spacing.unit,
-        marginRight: theme.spacing.unit,
-        width: 200,
+        marginRight: theme.spacing.unit*5,
+        width: 175,
     },
 
     main: {
-        height: '100vh',
+        height: '100%',
         width: 'auto',
         display: 'block', // Fix IE 11 issue.
         marginLeft: theme.spacing.unit * 3,
@@ -36,18 +44,25 @@ const styles = theme => ({
         },
     },
     paper: {
-        marginTop: theme.spacing.unit * 8,
+        marginTop: '30px',
+        marginBottom: '18px',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+        padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 5}px ${theme.spacing.unit * 5}px`,
     },
     avatar: {
         margin: theme.spacing.unit,
-        backgroundColor: theme.palette.secondary.main,
+        backgroundColor: 'purple',
     },
     form: {
         width: '100%', // Fix IE 11 issue.
+    },
+    submit: {
+        textTransform: 'none',
+        fontSize: '1em',
+        marginLeft: '1em',
+        width: '45%'
     },
     gridItem: {
     },
@@ -72,96 +87,88 @@ const locations = [
 
 const types = [
     {
-        value: 'HOUSE',
+        value: 'House',
     },
     {
-        value: 'APARTMENT',
+        value: 'Apartment',
     }
 ];
 
 class CreateProperty extends Component {
-
-    constructor(props) {
-        super(props)
-        this.state = {
-            files: [],
-            error: null,
-            success: null,
-            location: 'TORONTO, ON',
-            type: 'HOUSE',
-            yo: false
-        }
-
-        this.changeState = this.changeState.bind(this);
+  constructor(props) {
+    super(props)
+    this.state = {
+      files: [],
+      error: null,
+      success: null,
+      toSuccess: false,
+      location: 'TORONTO, ON',
+      type: 'House',
+      yo: false
     }
 
+    this.changeState = this.changeState.bind(this);
+    this.onCancel = this.onCancel.bind(this);
+  }
 
+  getBase64(file, cb) {
+    let reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = function () { cb(reader.result) };
+    reader.onerror = function (error) { console.log('Error: ', error); };
+  }
 
-    getBase64(file, cb) {
-        let reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function () {
-            cb(reader.result)
-        };
-        reader.onerror = function (error) {
-            console.log('Error: ', error);
-        };
-    }
+  onDrop(files) {
+    // TODO: ERROR CHECKING MAX 5 FILES
+    var prevFiles = this.state.files;
+    if (prevFiles.length === 5)
+      return;
 
-    onDrop(files) {
-        // TODO: ERROR CHECKING MAX 5 FILES
+    console.log(files);
+    prevFiles = prevFiles.concat(files);
+    if (prevFiles > 5)
+      prevFiles = prevFiles.slice(0, 5);
 
-        var prevFiles = this.state.files;
+    this.setState({
+      files: prevFiles
+    });
+  }
 
-        if (prevFiles.length === 5)
-            return;
-        console.log(files);
-        prevFiles = prevFiles.concat(files);
-        if (prevFiles > 5)
-            prevFiles = prevFiles.slice(0, 5);
-        this.setState({
-            files: prevFiles
-        });
-    }
+  onCancel() {
+    this.props.history.goBack();
+  }
 
-    onCancel() {
-        this.setState({
-            files: []
-        });
-    }
-
-    onSubmit = (e) => {
-
-        var base64Arr = [];
-        var data = {
-            rent: e.target.rent.value,
-            numWashrooms: e.target.washroom.value,
-            numBedrooms: e.target.bedroom.value,
-            numOtherRooms: e.target.otherRooms.value,
-            type: e.target.type.value,
-            location: e.target.location.value,
-            address: e.target.address.value
-
-        }
-        this.state.files.forEach(f => {
-            this.getBase64(f, res => {
-                base64Arr.push(res);
-                if (base64Arr.length === 5) {
-                    data.images = base64Arr;
-                    console.log('about to make request')
-                    Fetcher.addProperty(data, this.changeState)
-                }
-            })
-        });
-    }
-    removeFile(i) {
+  onSubmit = (e) => {
+      var base64Arr = [];
+      var data = {
+        rent: e.target.rent.value,
+        numWashrooms: e.target.washroom.value,
+        numBedrooms: e.target.bedroom.value,
+        numOtherRooms: e.target.otherRooms.value,
+        type: e.target.type.value,
+        location: e.target.location.value,
+        address: e.target.address.value
+      }
+      this.state.files.forEach(f => {
+        this.getBase64(f, res => {
+          base64Arr.push(res);
+          if (base64Arr.length === 5) {
+            data.images = base64Arr;
+            console.log('about to make request')
+            Fetcher.addProperty(data, this.changeState)
+          }
+        })
+      });
+      this.setState({ toSuccess: true });
+  }
+  removeFile(i) {
         console.log("here", i);
         let files = this.state.files;
         files.splice(i, 1);
         console.log(files.length, "inside remove file");
         this.setState({ files: files });
-    }
-    changeState(status, msg) {
+  }
+  changeState(status, msg) {
         if (status === 'success') {
             console.log("status", status, msg);
             this.setState({
@@ -172,22 +179,34 @@ class CreateProperty extends Component {
         } else {
             this.setState({ error: msg })
         }
-    }
-    handleChange = name => event => {
+  }
+  handleChange = name => event => {
         console.log([name]);
         this.setState({
             [name]: event.target.value,
         });
-    };
+  };
 
-    render() {
+  render() {
         const error = this.state.error;
         const successMsg = this.state.success;
         const { classes } = this.props;
 
         console.log('this.state.files', this.state.files)
 
+        if (this.state.toSuccess)
+          return <Redirect push to={{
+            pathname: '/Success',
+            state: { successMsg: "Property has been added." }
+          }} />
+
         return (
+          <div style={{
+            width: '100%',
+            height: '100vh',
+            backgroundImage: 'url("https://i.imgur.com/mZw0ElZ.png")',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'repeat-y'}}>
             <main className={classes.main}>
                 <CssBaseline />
                 <Paper className={classes.paper}>
@@ -195,8 +214,8 @@ class CreateProperty extends Component {
                         <Add />
                     </Avatar>
                     <Typography component="h1" variant="h5">
-                        Add Property
-          </Typography>
+                        Add a Property
+                    </Typography>
                     <Typography component="p" variant="h5" style={error ? { color: 'red' } : { color: 'green' }}>
                         {
                             error ?
@@ -267,6 +286,9 @@ class CreateProperty extends Component {
                                 </Grid>
 
                                 <Grid item md={4} className={classes.gridItem}>
+                                    <p style={{ marginLeft: '0.4em', marginTop: '-2em', marginBottom: '0.2em', fontWeight: '500'}}>
+                                      Type:
+                                    </p>
                                     <TextField
                                         id="type"
                                         select
@@ -287,14 +309,11 @@ class CreateProperty extends Component {
                                         ))}
                                     </TextField>
                                 </Grid>
-
                                 <Grid item md={4} className={classes.gridItem}>
-
-                                    <Dropzone
-                                        onDrop={this.onDrop.bind(this)}
-                                    // onFileDialogCancel={this.onCancel.bind(this)}
-                                    >
-                                        <p>Add Pictures here</p>
+                                    <Dropzone onDrop={this.onDrop.bind(this)} /*onFileDialogCancel={this.onCancel.bind(this)}*/>
+                                        <p style={{ position: 'absolute', top: '4.5em', left: '0.6em', color: 'green'}}>
+                                          Click/Drop Images Here!
+                                        </p>
                                     </Dropzone>
                                 </Grid>
                                 <Grid item md={12} className={classes.gridItem}>
@@ -317,17 +336,25 @@ class CreateProperty extends Component {
                                     </List>
                                 </Grid>
                                 <Grid item md={8}>
+                                  <Button
+                                      type="button"
+                                      onClick={this.onCancel}
+                                      margin='normal'
+                                      variant="contained"
+                                      color="secondary"
+                                      className={classes.submit}
+                                  >
+                                      Cancel
+                                  </Button>
                                     <Button
                                         type="submit"
-                                        fullWidth
                                         margin='normal'
                                         variant="contained"
                                         color="primary"
                                         className={classes.submit}
                                     >
-                                        CREATE PROPERTY
+                                        Add Property
                                     </Button>
-
                                 </Grid>
 
 
@@ -339,8 +366,9 @@ class CreateProperty extends Component {
                     </div>
                 </Paper>
             </main>
+          </div>
         )
-    }
-
+  }
 }
+
 export default withStyles(styles)(CreateProperty);

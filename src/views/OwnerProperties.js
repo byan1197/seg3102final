@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Grid, Typography, Fab, Tooltip } from '@material-ui/core';
+import { Card, CardContent, CardMedia, Grid, Typography, Fab, Tooltip, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -7,6 +7,7 @@ import { Component, default as React } from 'react';
 import 'react-image-gallery/styles/css/image-gallery.css';
 import Fetcher from '../helpers/fetcher';
 import { Redirect } from 'react-router-dom';
+
 const styles = theme => ({
     container: {
         display: 'flex',
@@ -39,35 +40,35 @@ class OwnerProperties extends Component {
         this.state = {
             message: 'NO_MESSAGE',
             properties: [],
+            numVisible: 4,
             messageType: '',
             toUpdatePage: false,
             propertyToUpdate: null
         }
-    }
 
+    this.refreshProperties = this.refreshProperties.bind(this);
+    this.onLoadMore = this.onLoadMore.bind(this);
+    }
 
     componentDidMount() {
         this.refreshProperties()
     }
 
-    refreshProperties = () => {
-        Fetcher.getOwnerProperties()
-            .then(res => {
-                if (res.error || res.err) {
-                    this.setState({
-                        message: res.error.message
-                    })
-                    return;
-                }
-                else if (res.length === 0) {
-                    this.setState({
-                        message: "You have no listed properties."
-                    })
-                }
-                this.setState({ properties: res });
-            });
+    refreshProperties(){
+      Fetcher.getOwnerProperties().then(res => {
+        if (res.error || res.err) {
+          this.setState({
+            message: res.error.message
+          })
+          return;
+        } else if (res.length === 0) {
+          this.setState({
+            message: "You have no listed properties."
+          })
+        }
+        this.setState({ properties: res });
+      });
     }
-
     deleteProperty = pid => {
         Fetcher.deleteProperty(pid)
             .then(res => {
@@ -98,21 +99,34 @@ class OwnerProperties extends Component {
     updateProperty(p) {
         this.setState({ toUpdatePage: true, propertyToUpdate: p })
     }
-    render() {
+    // onLoadMore(){
+    //   this.setState((prevState) => {
+    //     return {numVisible: prevState.numVisible + 5};
+    //   });
+    // }
+    onLoadMore(){
+      this.setState({ numVisible: this.state.numVisible + 5 });
+    }
 
+    render() {
         const { classes } = this.props;
+
         if (this.state.toUpdatePage)
-            return <Redirect push to={{ 
-                pathname: '/update_property', 
-                state: this.state.propertyToUpdate
-             }} />
+          return <Redirect push to={{
+            pathname: '/update_property',
+            state: this.state.propertyToUpdate
+          }} />
 
         return (
             <div style={{ width: '100%' }}>
                 <div className={classes.container}>
 
-                    <Grid container spacing={0} style={{ marginTop: '10px' }}>
-                        {/* FIX SPACING */}
+                    <Grid container spacing={0} style={{ marginTop: '1.5em', marginBottom: '1.5em', width: '100%', justifyContent: 'center' }}>
+                        <Grid item md={3}>
+                          <Typography variant='h3' style={{fontWeight: '100', marginLeft: '-3.3em'}}>
+                            Owned Properties
+                          </Typography>
+                        </Grid>
                         <Grid item md={2}>
                         </Grid>
                         <Grid item md={1}>
@@ -134,15 +148,9 @@ class OwnerProperties extends Component {
                         </Grid>
                         <Grid item md={1}>
                         </Grid>
-                        <Grid item md={3}>
-                            <Typography variant='display3'>
-                                Your Listings
-                            </Typography>
-                        </Grid>
                     </Grid>
 
-                    {
-                        this.state.properties.map((p, i) => (
+                    { this.state.properties.slice(0, this.state.numVisible).map((p, i) => (
                             <Card key={i} className={classes.ptyCard} >
                                 <CardMedia className={classes.cardImg} image={p.images[0]} />
                                 <div className={classes.details}>
@@ -161,7 +169,7 @@ class OwnerProperties extends Component {
                                                     <b>Rent</b>: ${p.rent}
                                                 </Typography>
                                                 <Typography>
-                                                    <b>Availability</b>: {JSON.stringify(p.isAvailable)}
+                                                    <b>Availabile</b>: {p.isAvailable ? "Yes" : "No"}
                                                 </Typography>
                                             </Grid>
                                             <Grid item md={3}>
@@ -206,7 +214,10 @@ class OwnerProperties extends Component {
                                     </CardContent>
                                 </div>
                             </Card>
-                        ))
+                      ))
+                    }
+                    {(this.state.numVisible >= this.state.properties.length) ?
+                      <div style={{ marginTop: '1.5em'}}></div> : <Button style={{ marginTop: '1.5em', marginBottom: '1.5em', color: 'grey' }} type='button' onClick={this.onLoadMore}>Load more</Button>
                     }
 
                 </div>

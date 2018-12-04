@@ -95,7 +95,9 @@ class Login extends Component {
           </Typography>
           { error ?
             <Typography component="p" variant="body1" style={{ color: 'red' }}>
-              {this.state.errorMessage}
+              {
+                this.state.errorMessage
+              }
             </Typography> : <div/>
           }
            <form className={classes.form} onSubmit={e => { e.preventDefault(); this.handleLogin(e) }}>

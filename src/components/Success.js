@@ -8,12 +8,13 @@ import Typography from '@material-ui/core/Typography';
 import withStyles from '@material-ui/core/styles/withStyles';
 // import Fetcher from '../helpers/fetcher';
 import { Done } from '@material-ui/icons';
-import { Redirect } from 'react-router-dom';
+
 const styles = theme => ({
   main: {
-    height: '100vh',
+    height: '100%',
     width: 'auto',
     display: 'block', // Fix IE 11 issue.
+    marginTop: theme.spacing.unit * 17,
     marginLeft: theme.spacing.unit * 3,
     marginRight: theme.spacing.unit * 3,
     [theme.breakpoints.up(400 + theme.spacing.unit * 3 * 2)]: {
@@ -27,11 +28,13 @@ const styles = theme => ({
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
+    padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit * 2}px ${theme.spacing.unit * 5}px ${theme.spacing.unit * 2}px`,
   },
   avatar: {
     margin: theme.spacing.unit,
-    backgroundColor: theme.palette.secondary.main,
+    backgroundColor: 'green',
+    marginBottom: '1em'
+    // theme.palette.secondary.main
   },
   form: {
     width: '100%', // Fix IE 11 issue.
@@ -43,46 +46,41 @@ const styles = theme => ({
 });
 
 class Success extends Component {
-
   constructor(props) {
     super(props);
     this.state = {
       errorMessage: null,
       success: null,
-      toHome: false
     }
   }
 
-
-
-
+  componentDidMount(){
+    setTimeout(() => {
+      this.props.history.push('/');
+    }, 1500);
+  }
 
   render() {
-
     const { classes } = this.props;
-    var redirectToHome = this.state.toHome;
-
-    if (redirectToHome)
-      return <Redirect to='/'></Redirect>
 
     return (
+    <div style={{overflowY: 'hidden', width: '100%'}}>
       <main className={classes.main}>
         <CssBaseline />
         <Paper className={classes.paper}>
           <Avatar className={classes.avatar}>
-            <Done />
+            <Done color='green' />
           </Avatar>
-          <Typography component="h1" variant="h5">
-            Success
+          <Typography style={{marginBottom: '0.5em'}} component="h1" variant="h5">
+            Success!
           </Typography>
-
-
-
+          <Typography style={{fontWeight: '100'}} component="h3" variant="h8" >
+            {this.props.location.state.successMsg}
+          </Typography>
         </Paper>
       </main>
-
+    </div>
     )
-
   }
 }
 

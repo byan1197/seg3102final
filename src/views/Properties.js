@@ -77,24 +77,22 @@ class Properties extends Component {
     }
 
     addToVisitingList = pid => {
-        Fetcher.postAddToVL(pid)
-            .then(res => {
-                if (res.error || res.err)
-                    this.setState({
-                        message: res.message,
-                        messageIsError: true
-                    })
-                else
-                    this.setState({
-                        message: "Successfully added to your visiting list",
-                        messageIsError: false
-                    })
-            })
-        setTimeout(() => {
-            this.setState({
-                message: "NO_MESSAGE"
-            })
-        }, 3000)
+      Fetcher.postAddToVL(pid)
+      .then(res => {
+        if (res.error || res.err)
+          this.setState({
+            message: res.message,
+            messageIsError: true
+          })
+        else
+          this.setState({
+            message: "Successfully added to your visiting list",
+            messageIsError: false
+        })
+      })
+      setTimeout(() => {
+        this.setState({ message: "NO_MESSAGE" })
+      }, 3000)
     }
 
     goToSearch = () => {

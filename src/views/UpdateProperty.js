@@ -1,8 +1,8 @@
-
+import React, { Component } from 'react';
+import { Redirect } from 'react-router-dom'
 import Dropzone from 'react-dropzone';
 import { List, ListItem, ListItemText, ListItemSecondaryAction, IconButton, Button, ListItemAvatar, Avatar } from '@material-ui/core/';
 import CloseIcon from '@material-ui/icons/Close';
-import React, { Component } from 'react';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import FormControl from '@material-ui/core/FormControl';
 import Input from '@material-ui/core/Input';
@@ -42,6 +42,11 @@ const styles = theme => ({
         alignItems: 'center',
         padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px ${theme.spacing.unit * 3}px`,
     },
+    submit: {
+        textTransform: 'none',
+        marginLeft: '1em',
+        width: '45%'
+    },
     avatar: {
         margin: theme.spacing.unit,
         backgroundColor: theme.palette.secondary.main,
@@ -80,13 +85,13 @@ const types = [
 ];
 
 class UpdateProperty extends Component {
-
     constructor(props) {
         super(props)
         this.state = {
             files: [],
             error: null,
             success: null,
+            toSuccess: false,
             location: 'TORONTO, ON',
             type: 'HOUSE',
             yo: false,
@@ -104,9 +109,8 @@ class UpdateProperty extends Component {
         }
 
         this.changeState = this.changeState.bind(this);
+        this.onCancel = this.onCancel.bind(this);
     }
-
-
 
     getBase64(file, cb) {
         let reader = new FileReader();
@@ -121,7 +125,6 @@ class UpdateProperty extends Component {
 
     onDrop(files) {
         // TODO: ERROR CHECKING MAX 5 FILES
-
         var prevFiles = this.state.values.images;
 
         if (prevFiles.length === 5)
@@ -133,17 +136,13 @@ class UpdateProperty extends Component {
         let newState = { ...this.state.values };
         newState.images = prevFiles
         this.setState({ values: newState });
-
     }
 
     onCancel() {
-        this.setState({
-            files: []
-        });
+      this.props.history.goBack();
     }
 
     onSubmit = (e) => {
-
         var base64Arr = [];
         var imgurArr = this.state.values.images.filter(i => typeof (i) === 'string');
         var fileArr = this.state.values.images.filter(i => typeof (i) === 'object');
@@ -176,11 +175,12 @@ class UpdateProperty extends Component {
                 })
             });
         });
-
         pr.then((result) => {
             Fetcher.patchProperty(data, this.changeState);
         })
+        this.setState({ toSuccess: true });
     }
+
     removeFile(i) {
         console.log("here", i);
         var newState = { ...this.state.values };
@@ -189,8 +189,8 @@ class UpdateProperty extends Component {
         console.log(files.length, "inside remove file");
         this.setState({ values: newState })
     }
-    changeState(status, msg) {
 
+    changeState(status, msg) {
         if (status === 'success') {
             console.log("status", status, msg);
             this.setState({
@@ -202,6 +202,7 @@ class UpdateProperty extends Component {
             this.setState({ error: msg })
         }
     }
+
     handleChange = name => event => {
         this.setState({
             [name]: event.target.value,
@@ -213,7 +214,6 @@ class UpdateProperty extends Component {
         newState[e.target.name] = e.target.value
         console.log(newState)
         this.setState({ values: newState })
-
     }
 
     render() {
@@ -222,6 +222,11 @@ class UpdateProperty extends Component {
         const { classes } = this.props;
 
         console.log('this.state', this.state.values)
+        if (this.state.toSuccess)
+          return <Redirect push to={{
+            pathname: '/Success',
+            state: { successMsg: "Property has been Updated!" }
+          }} />
 
         return (
             <main className={classes.main}>
@@ -325,13 +330,11 @@ class UpdateProperty extends Component {
                                 </Grid>
 
                                 <Grid item md={4} className={classes.gridItem}>
-
-                                    <Dropzone
-                                        onDrop={this.onDrop.bind(this)}
-                                    // onFileDialogCancel={this.onCancel.bind(this)}
-                                    >
-                                        <p>Add Pictures here</p>
-                                    </Dropzone>
+                                  <Dropzone onDrop={this.onDrop.bind(this)} /*onFileDialogCancel={this.onCancel.bind(this)}*/>
+                                      <p style={{ position: 'absolute', top: '4.5em', left: '0.6em', color: 'green'}}>
+                                        Click/Drop Images Here!
+                                      </p>
+                                  </Dropzone>
                                 </Grid>
                                 <Grid item md={12} className={classes.gridItem}>
                                     <List>
@@ -362,14 +365,23 @@ class UpdateProperty extends Component {
                                 </Grid>
                                 <Grid item md={8}>
                                     <Button
+                                        type="button"
+                                        onClick={this.onCancel}
+                                        margin='normal'
+                                        variant="contained"
+                                        color="secondary"
+                                        className={classes.submit}
+                                    >
+                                        Cancel
+                                    </Button>
+                                    <Button
                                         type="submit"
-                                        fullWidth
                                         margin='normal'
                                         variant="contained"
                                         color="primary"
                                         className={classes.submit}
                                     >
-                                        UPDATE PROPERTY
+                                        Update Property
                                     </Button>
 
                                 </Grid>
