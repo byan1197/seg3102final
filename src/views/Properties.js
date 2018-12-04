@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Dialog, DialogTitle, Fab, Tooltip, Grid, Typography, DialogContent, Button } from '@material-ui/core';
+import { Card, CardContent, CardMedia, Dialog, DialogTitle, Fab, Tooltip, Grid, Typography, DialogContent, Button, Select, MenuItem } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
@@ -77,27 +77,44 @@ class Properties extends Component {
     }
 
     addToVisitingList = pid => {
-      Fetcher.postAddToVL(pid)
-      .then(res => {
-        if (res.error || res.err)
-          this.setState({
-            message: res.message,
-            messageIsError: true
-          })
-        else
-          this.setState({
-            message: "Successfully added to your visiting list",
-            messageIsError: false
-        })
-      })
-      setTimeout(() => {
-        this.setState({ message: "NO_MESSAGE" })
-      }, 3000)
+        Fetcher.postAddToVL(pid)
+            .then(res => {
+                if (res.error || res.err)
+                    this.setState({
+                        message: res.message,
+                        messageIsError: true
+                    })
+                else
+                    this.setState({
+                        message: "Successfully added to your visiting list",
+                        messageIsError: false
+                    })
+            })
+        setTimeout(() => {
+            this.setState({ message: "NO_MESSAGE" })
+        }, 3000)
     }
 
     goToSearch = () => {
         this.setState({
             toSearch: true
+        })
+    }
+
+    sortProperties = (e) => {
+        var key = '';
+        var newProperties = this.state.properties;
+
+        if (e.target.value.includes('_A')) {
+            key = e.target.value.replace('_A', '')
+            newProperties.sort((a, b) => b[key] - a[key]);
+        }
+        else {
+            key = e.target.value.replace('_D', '')
+            newProperties.sort((a, b) => a[key] - b[key]);
+        }
+        this.setState({
+            properties: newProperties
         })
     }
 
@@ -130,20 +147,21 @@ class Properties extends Component {
                     </Grid>
                     <Grid item md={1}>
                         <Button style={{
-                          width: '12em',
-                          textAlign: 'right',
-                          marginLeft: '1.4em',
-                          marginTop: '0.5em',
-                          border: '1px solid #003366'}}
-                          onClick={this.goToSearch}>
+                            width: '12em',
+                            textAlign: 'right',
+                            marginLeft: '1.4em',
+                            marginTop: '0.5em',
+                            border: '1px solid #003366'
+                        }}
+                            onClick={this.goToSearch}>
                             <KeyboardBackspaceIcon />
                             Search Properties
                         </Button>
                     </Grid>
-                      <Typography variant='h3' style={{fontWeight: '100', marginLeft: '-2.1em', marginTop: '1.7em'}}>
+                    <Typography variant='h3' style={{ fontWeight: '100', marginLeft: '-2.1em', marginTop: '1.7em' }}>
                         Search Results:
                       </Typography>
-                    <Grid item md={9}>
+                    <Grid item md={4}>
                         {
                             this.state.message !== 'NO_MESSAGE' &&
                             <Card style={{
@@ -159,6 +177,25 @@ class Properties extends Component {
                                 </CardContent>
                             </Card>
                         }
+                    </Grid>
+                    <Grid item md={4}>
+                        <Select
+                            variant='filled'
+                            value={this.state.sortBy}
+                            onChange={this.sortProperties}
+                            inputProps={{
+                                name: 'age',
+                                id: 'age-simple',
+                            }}
+                        >
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            <MenuItem value={'rent_D'}>Rent (Low to High)</MenuItem>
+                            <MenuItem value={'rent_A'}>Rent (High to Low)</MenuItem>
+                            <MenuItem value={'numBedrooms_D'}>Bedrooms (Low to High)</MenuItem>
+                            <MenuItem value={'numBedrooms_A'}>Bedrooms (High to Low)</MenuItem>
+                        </Select>
                     </Grid>
                 </Grid>
 
