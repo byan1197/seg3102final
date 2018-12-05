@@ -1,4 +1,4 @@
-import { Card, CardContent, CardMedia, Grid, Typography, Fab, Tooltip, Button, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { Card, CardContent, CardMedia, Grid, Typography, Fab, Tooltip, Button, MenuItem, Select } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import EditIcon from '@material-ui/icons/Edit';
 import DeleteIcon from '@material-ui/icons/Delete';
