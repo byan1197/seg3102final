@@ -1,4 +1,18 @@
-import { Card, CardContent, CardMedia, Dialog, DialogTitle, Fab, Tooltip, Grid, Typography, DialogContent, Button, Select, MenuItem } from '@material-ui/core';
+import {
+    Card,
+    CardContent,
+    CardMedia,
+    Dialog,
+    DialogTitle,
+    Fab,
+    Tooltip,
+    Grid,
+    Typography,
+    DialogContent,
+    Button,
+    Select,
+    MenuItem
+} from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import AddIcon from '@material-ui/icons/Add';
 import KeyboardBackspaceIcon from '@material-ui/icons/KeyboardBackspace';
@@ -179,6 +193,9 @@ class Properties extends Component {
                         }
                     </Grid>
                     <Grid item md={4}>
+                        <Typography>
+                            Sort By:
+                        </Typography>
                         <Select
                             variant='filled'
                             value={this.state.sortBy}

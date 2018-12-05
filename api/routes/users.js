@@ -7,11 +7,6 @@ const jwt = require('jsonwebtoken');
 const checkAuth = require('../middleware/check_auth');
 
 router.post('/signup', /*checkAuth,*/ (req, res, next) => {
-    console.log(req);
-    // if (req.get('type') !== "AGENT")
-    //     return res.status(400).json({
-    //         message: "Unauthorized to create account"
-    //     })
 
     User.find({
         username: req.body.username
@@ -23,7 +18,6 @@ router.post('/signup', /*checkAuth,*/ (req, res, next) => {
                     message: "username exists"
                 });
             } else {
-                console.log("HASHHH")
                 const hash = bcrypt.hash(req.body.password, 10, (err, hash) => {
                     if (err) {
                         return res.status(500).json({

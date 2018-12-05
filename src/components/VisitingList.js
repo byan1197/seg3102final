@@ -123,9 +123,7 @@ class VistiingList extends Component {
                                             <Grid item md={3} style={
                                                 {
                                                     display: 'flex',
-                                                    alignContent: 'flex-end',
                                                     alignItems: 'center',
-                                                    flexDirection: 'row',
                                                     justifyContent: 'center'
                                                 }
                                             }>

@@ -1,16 +1,16 @@
 import React from 'react';
 import { Route, Switch, Redirect } from 'react-router-dom';
-import Login from './Login';
-import Home from '../views/Home';
-import Account from './Account';
-import CreateAccount from './CreateAccount';
+import Login from '../Login';
+import Home from '../Home';
+import Account from '../Account';
+import CreateAccount from '../CreateAccount';
 import Success from './Success';
-import Search from '../views/Search';
-import Properties from '../views/Properties';
-import VisitingList from '../views/VisitingList'
-import CreateProperty from '../views/CreateProperty';
-import OwnerProperties from '../views/OwnerProperties';
-import UpdateProperty from '../views/UpdateProperty';
+import Search from '../Search';
+import Properties from '../Properties';
+import VisitingList from '../VisitingList'
+import CreateProperty from '../CreateProperty';
+import OwnerProperties from '../OwnerProperties';
+import UpdateProperty from '../UpdateProperty';
 
 const RouteList = () => (
   <Switch>

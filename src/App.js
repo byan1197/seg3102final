@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 import { BrowserRouter as Router } from 'react-router-dom';
 import './App.css';
-import NavBar from './components/NavBar'
-import RouteList from './components/RouteList';
+import NavBar from './components/functional/NavBar'
+import RouteList from './components/functional/RouteList';
 
 class App extends Component {
   constructor() {

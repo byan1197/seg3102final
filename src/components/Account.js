@@ -120,35 +120,33 @@ class SimpleExpansionPanel extends Component {
               <Grid container spacing={16}>
                 <Grid item md={4}>
                   <Typography>
-                    Username: {this.state.username}
+                    <b>Username: </b>{this.state.username}
                   </Typography>
                 </Grid>
 
                 <Grid item md={4}>
                   <Typography>
-                    Name: {this.state.name}
+                    <b>Name:</b> {this.state.name}
                   </Typography>
                 </Grid>
 
                 <Grid item md={4}>
                   <Typography>
-                    Email: {this.state.email}
+                    <b>Email: </b>{this.state.email}
                   </Typography>
                 </Grid>
 
                 <Grid item md={4}>
                   <Typography>
-                    Type: {this.state.type}
+                    <b>Type:</b> {this.state.type}
                   </Typography>
                 </Grid>
 
                 <Grid item md={4}>
                   <Typography>
-                    Max Rent: ${this.state.maxRent}
+                    <b>Max Rent:</b> ${this.state.maxRent}
                   </Typography>
                 </Grid>
-
-
               </Grid>
 
             </ExpansionPanelDetails>

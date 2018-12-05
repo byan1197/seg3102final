@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React from 'react';
 import PropTypes from 'prop-types';
 import Avatar from '@material-ui/core/Avatar';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -45,43 +45,32 @@ const styles = theme => ({
   },
 });
 
-class Success extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      errorMessage: null,
-      success: null,
-    }
-  }
+const Success = props => {
 
-  componentDidMount(){
-    setTimeout(() => {
-      this.props.history.push('/');
-    }, 1500);
-  }
+  setTimeout(() => {
+    props.history.push('/');
+  }, 1500);
 
-  render() {
-    const { classes } = this.props;
+  const { classes } = props;
 
-    return (
-    <div style={{overflowY: 'hidden', width: '100%'}}>
+  return (
+    <div style={{ overflowY: 'hidden', width: '100%' }}>
       <main className={classes.main}>
         <CssBaseline />
         <Paper className={classes.paper}>
           <Avatar className={classes.avatar}>
             <Done color='green' />
           </Avatar>
-          <Typography style={{marginBottom: '0.5em'}} component="h1" variant="h5">
+          <Typography style={{ marginBottom: '0.5em' }} component="h1" variant="h5">
             Success!
           </Typography>
-          <Typography style={{fontWeight: '100'}} component="h3" variant="h8" >
-            {this.props.location.state.successMsg}
+          <Typography style={{ fontWeight: '100' }} component="h3" variant="h8" >
+            {props.location.state.successMsg}
           </Typography>
         </Paper>
       </main>
     </div>
-    )
-  }
+  )
 }
 
 Success.propTypes = {
