@@ -54,7 +54,7 @@ const Success = props => {
   const { classes } = props;
 
   return (
-    <div style={{ overflowY: 'hidden', width: '100%' }}>
+    <div style={{ overflowY: 'hidden', width: '100%', background: 'linear-gradient(to right, #0f2027, #203a43, #2c5364)' }}>
       <main className={classes.main}>
         <CssBaseline />
         <Paper className={classes.paper}>
